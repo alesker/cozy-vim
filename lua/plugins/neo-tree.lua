@@ -8,13 +8,13 @@ return {
   opts = {
     filesystem = {
       filtered_items = {
-        visible = true, 
+        visible = true,
         hide_dotfiles = true,
         hide_gitignored = true,
       },
     }
   },
   config = function()
-    vim.keymap.set('n', '-', ':Neotree<CR>')
+    vim.keymap.set('n', '-', ':Neotree toggle<CR>')
   end
 }
