@@ -16,9 +16,11 @@ return {
   {
     'neovim/nvim-lspconfig',
     config = function()
-      local lspconfig = require('lspconfig')
-      lspconfig.lua_ls.setup({})
-      lspconfig.ruby_lsp.setup({})
+      vim.lsp.config('lua_ls', {})
+      vim.lsp.enable('lua_ls')
+
+      vim.lsp.config('ruby_lsp', {})
+      vim.lsp.enable('ruby_lsp')
 
       vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = '[C]ode [A]ctions' })
     end

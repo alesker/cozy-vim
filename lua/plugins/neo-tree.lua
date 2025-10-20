@@ -5,16 +5,19 @@ return {
     "MunifTanjim/nui.nvim",
     "nvim-tree/nvim-web-devicons",
   },
-  opts = {
-    filesystem = {
-      filtered_items = {
-        visible = true,
-        hide_dotfiles = true,
-        hide_gitignored = true,
+  config = function()
+    require('neo-tree').setup {
+      filesystem = {
+        filtered_items = {
+          visible = false,
+          hide_dotfiles = false,
+          hide_gitignored = true,
+          never_show = {
+            ".DS_Store",
+          },
+        },
       },
     }
-  },
-  config = function()
     vim.keymap.set('n', '-', ':Neotree toggle<CR>')
   end
 }

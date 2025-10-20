@@ -54,18 +54,18 @@ vim.o.sidescrolloff = 1
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
-vim.keymap.set('n', '<leader>tr', function() toggleRelativeNumber() end, { desc = 'Toggle [R]elative Number' })
-function toggleRelativeNumber ()
-	vim.o.relativenumber = not vim.o.relativenumber
+vim.keymap.set('n', '<leader>tr', function() ToggleRelativeNumber() end, { desc = 'Toggle [R]elative Number' })
+function ToggleRelativeNumber ()
+  vim.o.relativenumber = not vim.o.relativenumber
 end
 
-vim.keymap.set('n', '<leader>th', function() toggleHardMode() end, { desc = 'Toggle [H]ard Mode' })
+vim.keymap.set('n', '<leader>th', function() ToggleHardMode() end, { desc = 'Toggle [H]ard Mode' })
 local hardMode = false
-function toggleHardMode ()
+function ToggleHardMode ()
   hardMode = not hardMode
 
-  function toggleKey (key)
-    value = hardMode and '<Nop>' or key
+  local function toggleKey (key)
+    local value = hardMode and '<Nop>' or key
     vim.keymap.set({'n', 'i', 'v' }, key, value)
   end
 
