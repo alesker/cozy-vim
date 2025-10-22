@@ -77,7 +77,6 @@ function ToggleHardMode ()
   toggleKey('<BS>')
 end
 
-
 -- [[ Basic Autocommands ]]
 
 -- Highlight when yanking text
