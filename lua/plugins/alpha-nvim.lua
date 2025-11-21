@@ -1,5 +1,5 @@
 return {
-  'goolord/alpha-nvim',
+  "goolord/alpha-nvim",
   config = function()
     require("alpha.term")
     local alpha = require("alpha")
@@ -8,12 +8,12 @@ return {
     local term_width = 42
     local term_height = 12
     local header = nil
-    local neo = os.execute 'command -v neo &>/dev/null'
+    local neo = os.execute("command -v neo &>/dev/null")
 
     if neo == 0 then
       header = {
-        type = 'terminal',
-        command = 'neo --speed=5 -a -d 0.5 -D -m NEOVIM',
+        type = "terminal",
+        command = "neo --speed=5 -a -d 0.5 -D -m NEOVIM",
         width = term_width,
         height = term_height,
         opts = {
@@ -23,16 +23,16 @@ return {
       }
     else
       header = {
-        type = 'text',
+        type = "text",
         val = {
-          [[                                  __]],
-          [[     ___     ___    ___   __  __ /\_\    ___ ___]],
-          [[    / _ `\  / __`\ / __`\/\ \/\ \\/\ \  / __` __`\]],
-          [[   /\ \/\ \/\  __//\ \_\ \ \ \_/ |\ \ \/\ \/\ \/\ \]],
-          [[   \ \_\ \_\ \____\ \____/\ \___/  \ \_\ \_\ \_\ \_\]],
-          [[    \/_/\/_/\/____/\/___/  \/__/    \/_/\/_/\/_/\/_/]],
+          [[                                __                 ]],
+          [[   ___     ___    ___   __  __ /\_\    ___ ___     ]],
+          [[  / _ `\  / __`\ / __`\/\ \/\ \\/\ \  / __` __`\   ]],
+          [[ /\ \/\ \/\  __//\ \_\ \ \ \_/ |\ \ \/\ \/\ \/\ \  ]],
+          [[ \ \_\ \_\ \____\ \____/\ \___/  \ \_\ \_\ \_\ \_\ ]],
+          [[  \/_/\/_/\/____/\/___/  \/__/    \/_/\/_/\/_/\/_/ ]],
         },
-        opts = { position = 'center', hl = 'DashboardHeader' },
+        opts = { position = "center", hl = "DashboardHeader" },
       }
     end
 
@@ -61,11 +61,11 @@ return {
     alpha.setup({
       layout = {
         header,
-        { type = 'padding', val = 2 },
+        { type = "padding", val = 2 },
         title,
-        { type = 'padding', val = 2 },
+        { type = "padding", val = 2 },
         dashboard.section.buttons,
-        { type = 'padding', val = 2 },
+        { type = "padding", val = 2 },
         footer,
       },
       opts = {

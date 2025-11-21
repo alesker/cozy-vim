@@ -6,7 +6,7 @@ return {
     "nvim-tree/nvim-web-devicons",
   },
   config = function()
-    require('neo-tree').setup {
+    require("neo-tree").setup({
       filesystem = {
         filtered_items = {
           visible = false,
@@ -17,7 +17,7 @@ return {
           },
         },
       },
-    }
-    vim.keymap.set('n', '-', ':Neotree toggle<CR>')
-  end
+    })
+    vim.keymap.set("n", "-", ":Neotree toggle<CR>")
+  end,
 }
