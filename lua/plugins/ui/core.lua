@@ -1,6 +1,10 @@
 return {
   "folke/noice.nvim",
   event = "VeryLazy",
+  dependencies = {
+    "MunifTanjim/nui.nvim",
+    "rcarriga/nvim-notify",
+  },
   opts = {
     lsp = {
       -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
@@ -15,9 +19,5 @@ return {
         cmdline = { conceal = false },
       },
     },
-  },
-  dependencies = {
-    "MunifTanjim/nui.nvim",
-    "rcarriga/nvim-notify",
   },
 }
