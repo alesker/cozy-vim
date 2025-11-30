@@ -20,6 +20,7 @@ require("lazy").setup({
   spec = {
     { import = "plugins" },
     { import = "plugins.ui" },
+    { import = "plugins.lang" },
   },
   install = { colorscheme = { "desert" } },
   checker = { enabled = true },
