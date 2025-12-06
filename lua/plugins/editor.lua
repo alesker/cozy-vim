@@ -59,6 +59,16 @@ return {
     },
   },
   {
+    "folke/snacks.nvim",
+    priority = 1000,
+    opts = {
+      dim = { enabled = true },
+      indent = { enabled = true },
+      words = { enabled = true },
+    },
+  },
+
+  {
     "lewis6991/gitsigns.nvim",
     opts = {
       signs = {

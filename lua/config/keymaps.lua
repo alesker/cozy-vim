@@ -83,34 +83,38 @@ vim.keymap.set("n", "[e", diagnostic_goto(false, "ERROR"), { desc = "Prev Error"
 vim.keymap.set("n", "]w", diagnostic_goto(true, "WARN"), { desc = "Next Warning" })
 vim.keymap.set("n", "[w", diagnostic_goto(false, "WARN"), { desc = "Prev Warning" })
 
+Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
+Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
+Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>uL")
+Snacks.toggle.diagnostics():map("<leader>ud")
+
+Snacks.toggle.treesitter():map("<leader>uT")
+Snacks.toggle.dim():map("<leader>uD")
+Snacks.toggle.indent():map("<leader>ug")
+Snacks.toggle.profiler():map("<leader>dpp")
+Snacks.toggle.profiler_highlights():map("<leader>dph")
+
+Snacks.toggle({
+  get = function()
+    return not vim.g.hard_mode
+  end,
+  set = function(state)
+    vim.g.hard_mode = not state
+
+    local function toggleKey(key)
+      local value = not state and "<Nop>" or key
+      vim.keymap.set({ "n", "i", "v" }, key, value)
+    end
+
+    toggleKey("<Up>")
+    toggleKey("<Down>")
+    toggleKey("<Left>")
+    toggleKey("<Right>")
+    toggleKey("<Del>")
+    toggleKey("<BS>")
+  end,
+  name = "Hard Mode",
+}):map("<leader>uH")
 ---------------------------------------------------
 
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
-
-vim.keymap.set("n", "<leader>tr", function()
-  ToggleRelativeNumber()
-end, { desc = "Toggle [R]elative Number" })
-vim.keymap.set("n", "<leader>th", function()
-  ToggleHardMode()
-end, { desc = "Toggle [H]ard Mode" })
-
-function ToggleRelativeNumber()
-  vim.o.relativenumber = not vim.o.relativenumber
-end
-
-local hardMode = false
-function ToggleHardMode()
-  hardMode = not hardMode
-
-  local function toggleKey(key)
-    local value = hardMode and "<Nop>" or key
-    vim.keymap.set({ "n", "i", "v" }, key, value)
-  end
-
-  toggleKey("<Up>")
-  toggleKey("<Down>")
-  toggleKey("<Left>")
-  toggleKey("<Right>")
-  toggleKey("<Del>")
-  toggleKey("<BS>")
-end
