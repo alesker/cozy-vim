@@ -50,11 +50,20 @@ return {
     "folke/which-key.nvim",
     event = "VimEnter",
     opts = {
-      delay = 0,
+      preset = "helix",
       spec = {
         { "<leader>s", group = "[S]earch" },
         { "<leader>t", group = "[T]oggle" },
         { "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+      },
+    },
+    keys = {
+      {
+        "<leader>?",
+        function()
+          require("which-key").show({ global = false })
+        end,
+        desc = "Buffer Keymaps (which-key)",
       },
     },
   },
@@ -78,6 +87,20 @@ return {
         topdelete = { text = "‾" },
         changedelete = { text = "~" },
       },
+      on_attach = function(buffer)
+        local gs = package.loaded.gitsigns
+
+        local function map(mode, l, r, desc)
+          vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc, silent = true })
+        end
+
+        map("n", "<leader>ghb", function()
+          gs.blame_line({ full = true })
+        end, "Blame Line")
+        map("n", "<leader>ghB", function()
+          gs.blame()
+        end, "Blame Buffer")
+      end,
     },
   },
   {
