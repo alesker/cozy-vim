@@ -5,8 +5,6 @@ return {
     local alpha = require("alpha")
     local dashboard = require("alpha.themes.dashboard")
 
-    local term_width = 42
-    local term_height = 12
     local header = nil
     local neo = os.execute("command -v neo &>/dev/null")
 
@@ -14,8 +12,8 @@ return {
       header = {
         type = "terminal",
         command = "neo --speed=5 -a -d 0.5 -D -m NEOVIM",
-        width = term_width,
-        height = term_height,
+        width = 42,
+        height = 12,
         opts = {
           redraw = true,
           window_config = {},
@@ -25,21 +23,16 @@ return {
       header = {
         type = "text",
         val = {
-          [[                                __                 ]],
-          [[   ___     ___    ___   __  __ /\_\    ___ ___     ]],
-          [[  / _ `\  / __`\ / __`\/\ \/\ \\/\ \  / __` __`\   ]],
-          [[ /\ \/\ \/\  __//\ \_\ \ \ \_/ |\ \ \/\ \/\ \/\ \  ]],
-          [[ \ \_\ \_\ \____\ \____/\ \___/  \ \_\ \_\ \_\ \_\ ]],
-          [[  \/_/\/_/\/____/\/___/  \/__/    \/_/\/_/\/_/\/_/ ]],
+          [[ ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ]],
+          [[ ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ]],
+          [[ ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ]],
+          [[ ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ]],
+          [[ ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ]],
+          [[ ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ]],
         },
         opts = { position = "center", hl = "DashboardHeader" },
       }
     end
-
-    local section = {
-      terminal = dashboard.section.default_terminal,
-      header = header,
-    }
 
     local title = {
       type = "text",
@@ -58,13 +51,28 @@ return {
       },
     }
 
+    local buttons = {
+      type = "group",
+      val = {
+        dashboard.button("n", " " .. " " .. "New file", ":enew <BAR> startinsert <CR>"),
+        dashboard.button("f", " " .. " " .. "Find file", ":Telescope find_files <CR>"),
+        dashboard.button("r", " " .. " " .. "Recent files", ":Telescope oldfiles <CR>"),
+        dashboard.button("g", " " .. " " .. "Find text", ":Telescope live_grep <CR>"),
+        dashboard.button("c", " " .. " " .. "Config", ":e $MYVIMRC <CR>"),
+        dashboard.button("s", " " .. " " .. "Restore Session", ":lua require('persistence').load() <CR>"),
+        dashboard.button("l", "󰒲 " .. " " .. "Lazy", ":Lazy <CR>"),
+        dashboard.button("m", " " .. " " .. "Mason", ":Mason <CR>"),
+        dashboard.button("q", " " .. " " .. "Quit", ":qa <CR>"),
+      },
+    }
+
     alpha.setup({
       layout = {
         header,
         { type = "padding", val = 2 },
         title,
         { type = "padding", val = 2 },
-        dashboard.section.buttons,
+        buttons,
         { type = "padding", val = 2 },
         footer,
       },

@@ -6,4 +6,9 @@ return {
       toggle = { enabled = true },
     },
   },
+  {
+    "folke/persistence.nvim",
+    event = "BufReadPre",
+    opts = {},
+  },
 }
