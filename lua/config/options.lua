@@ -6,7 +6,16 @@ vim.o.confirm = true
 vim.o.undofile = true
 vim.o.updatetime = 250
 
-vim.o.sessionoptions = "buffers,curdir,tabpages,winsize,help,globals,skiprtp,folds"
+vim.opt.sessionoptions = {
+  "buffers",
+  "curdir",
+  "tabpages",
+  "winsize",
+  "help",
+  "globals",
+  "skiprtp",
+  "folds",
+}
 
 vim.o.undolevels = 10000
 

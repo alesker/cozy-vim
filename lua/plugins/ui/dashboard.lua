@@ -51,18 +51,20 @@ return {
       },
     }
 
+    local icons = Core.icons.dashboard
+
     local buttons = {
       type = "group",
       val = {
-        dashboard.button("n", " " .. " " .. "New file", ":enew <BAR> startinsert <CR>"),
-        dashboard.button("f", " " .. " " .. "Find file", ":Telescope find_files <CR>"),
-        dashboard.button("r", " " .. " " .. "Recent files", ":Telescope oldfiles <CR>"),
-        dashboard.button("g", " " .. " " .. "Find text", ":Telescope live_grep <CR>"),
-        dashboard.button("c", " " .. " " .. "Config", ":e $MYVIMRC <CR>"),
-        dashboard.button("s", " " .. " " .. "Restore Session", ":lua require('persistence').load() <CR>"),
-        dashboard.button("l", "󰒲 " .. " " .. "Lazy", ":Lazy <CR>"),
-        dashboard.button("m", " " .. " " .. "Mason", ":Mason <CR>"),
-        dashboard.button("q", " " .. " " .. "Quit", ":qa <CR>"),
+        dashboard.button("n", icons.new_file .. "  " .. "New file", ":enew <BAR> startinsert <CR>"),
+        dashboard.button("f", icons.find_file .. "  " .. "Find file", ":Telescope find_files <CR>"),
+        dashboard.button("r", icons.recent_files .. "  " .. "Recent files", ":Telescope oldfiles <CR>"),
+        dashboard.button("g", icons.find_text .. "  " .. "Find text", ":Telescope live_grep <CR>"),
+        dashboard.button("c", icons.config .. "  " .. "Config", ":e $MYVIMRC <CR>"),
+        dashboard.button("s", icons.restore_session .. "  " .. "Restore Session", ":PersistenceLoad <CR>"),
+        dashboard.button("l", icons.lazy .. "  " .. "Lazy", ":Lazy <CR>"),
+        dashboard.button("m", icons.mason .. "  " .. "Mason", ":Mason <CR>"),
+        dashboard.button("q", icons.quit .. "  " .. "Quit", ":qa <CR>"),
       },
     }
 

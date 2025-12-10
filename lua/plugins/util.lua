@@ -8,7 +8,13 @@ return {
   },
   {
     "folke/persistence.nvim",
-    event = "BufReadPre",
     opts = {},
+    config = function(_, opts)
+      require("persistence").setup(opts)
+
+      vim.api.nvim_create_user_command("PersistenceLoad", function(_)
+        require("persistence").load()
+      end, { desc = "Restore most recent session" })
+    end,
   },
 }
