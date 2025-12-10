@@ -52,9 +52,20 @@ return {
     opts = {
       preset = "helix",
       spec = {
-        { "<leader>s", group = "[S]earch" },
-        { "<leader>t", group = "[T]oggle" },
-        { "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+        mode = { "n", "x" },
+        { "<leader>c", group = "code" },
+        { "<leader>d", group = "debug" },
+        { "<leader>dp", group = "profiler" },
+        { "<leader>f", group = "file/find" },
+        { "<leader>g", group = "git" },
+        { "<leader>s", group = "search" },
+        { "<leader>u", group = "ui" },
+        { "<leader>x", group = "diagnostics/quickfix" },
+        { "[", group = "prev" },
+        { "]", group = "next" },
+        { "g", group = "goto" },
+        { "gs", group = "surround" },
+        { "z", group = "fold" },
       },
     },
     keys = {
@@ -76,16 +87,15 @@ return {
       words = { enabled = true },
     },
   },
-
   {
     "lewis6991/gitsigns.nvim",
     opts = {
       signs = {
-        add = { text = "+" },
-        change = { text = "~" },
-        delete = { text = "_" },
-        topdelete = { text = "‾" },
-        changedelete = { text = "~" },
+        add = { text = Core.icons.git.diff.add },
+        change = { text = Core.icons.git.diff.change },
+        delete = { text = Core.icons.git.diff.delete },
+        topdelete = { text = Core.icons.git.diff.topdelete },
+        changedelete = { text = Core.icons.git.diff.changedelete },
       },
       on_attach = function(buffer)
         local gs = package.loaded.gitsigns
@@ -94,10 +104,10 @@ return {
           vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc, silent = true })
         end
 
-        map("n", "<leader>ghb", function()
+        map("n", "<leader>gb", function()
           gs.blame_line({ full = true })
         end, "Blame Line")
-        map("n", "<leader>ghB", function()
+        map("n", "<leader>gB", function()
           gs.blame()
         end, "Blame Buffer")
       end,
@@ -157,5 +167,24 @@ return {
         builtin.find_files({ cwd = vim.fn.stdpath("config") })
       end, { desc = "[S]earch [N]eovim files" })
     end,
+  },
+  {
+    "folke/trouble.nvim",
+    cmd = { "Trouble" },
+    opts = {
+      modes = {
+        lsp = {
+          win = { position = "right" },
+        },
+      },
+    },
+    keys = {
+      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics (Trouble)" },
+      { "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Buffer Diagnostics (Trouble)" },
+      { "<leader>cs", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols (Trouble)" },
+      { "<leader>cS", "<cmd>Trouble lsp toggle<cr>", desc = "LSP references/definitions/... (Trouble)" },
+      { "<leader>xL", "<cmd>Trouble loclist toggle<cr>", desc = "Location List (Trouble)" },
+      { "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix List (Trouble)" },
+    },
   },
 }
