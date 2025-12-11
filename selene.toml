@@ -1,0 +1,12 @@
+std = "lua51"
+
+[lints]
+mixed_table="allow"
+
+# Lua LS takes care of these already
+undefined_variable = "allow"
+unused_variable = "allow"
+empty_if = "allow"
+unscoped_variables = "allow"
+multiple_statements = "allow"
+shadowing = "allow"

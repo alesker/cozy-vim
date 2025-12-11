@@ -1,4 +1,4 @@
-_G.Core = {}
+Core = {}
 
 Core.icons = {
 
