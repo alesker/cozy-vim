@@ -14,11 +14,22 @@ return {
   end,
   config = function()
     vim.o.laststatus = vim.g.lualine_laststatus
+
+    local function location()
+      local total_lines = vim.fn.line("$")
+      local line = vim.fn.line(".")
+      local col = vim.fn.charcol(".")
+      return string.format("%3d:%-2d [%d]", line, col, total_lines)
+    end
+
     require("lualine").setup({
       options = {
         disabled_filetypes = { statusline = { "alpha" } },
         component_separators = "",
-        section_separators = { left = Core.icons.statusline.bubble_left, right = Core.icons.statusline.bubble_right },
+        section_separators = {
+          left = Core.icons.statusline.bubble_left,
+          right = Core.icons.statusline.bubble_right,
+        },
       },
 
       sections = {
@@ -31,7 +42,7 @@ return {
         },
         lualine_c = {
           { "branch", icon = Core.icons.git.branch },
-          "diff",
+          { "diff", padding = {} },
         },
         lualine_x = {
           {
@@ -45,13 +56,18 @@ return {
           },
         },
         lualine_y = {
-          "progress",
+          { "lsp_status", symbols = { separator = " " .. Core.icons.statusline.separator .. " " } },
         },
         lualine_z = {
-          { "location", separator = { right = Core.icons.statusline.bubble_left } },
+          { location, separator = { right = Core.icons.statusline.bubble_left } },
         },
       },
-      extensions = { "neo-tree", "lazy" },
+      extensions = {
+        "lazy",
+        "mason",
+        "neo-tree",
+        "trouble",
+      },
     })
   end,
 }

@@ -24,6 +24,7 @@ Core.icons = {
     hint = "",
   },
   statusline = {
+    separator = "|",
     bubble_left = "",
     bubble_right = "",
   },
