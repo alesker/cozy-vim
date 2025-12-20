@@ -16,7 +16,12 @@ return {
       cmdline = {
         view = "cmdline",
         format = {
-          cmdline = { conceal = false },
+          cmdline = {
+            conceal = false,
+            icon = Core.icons.cmdline.cmdline,
+          },
+          search_down = { icon = Core.icons.cmdline.search_down },
+          search_up = { icon = Core.icons.cmdline.search_up },
         },
       },
     },

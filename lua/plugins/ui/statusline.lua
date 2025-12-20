@@ -48,10 +48,10 @@ return {
           {
             "diagnostics",
             symbols = {
-              info = Core.icons.diagnostics.info .. " ",
-              warn = Core.icons.diagnostics.warn .. " ",
-              error = Core.icons.diagnostics.error .. " ",
-              hint = Core.icons.diagnostics.hint .. " ",
+              info = Core.icons.diagnostics.info,
+              warn = Core.icons.diagnostics.warn,
+              error = Core.icons.diagnostics.error,
+              hint = Core.icons.diagnostics.hint,
             },
           },
         },

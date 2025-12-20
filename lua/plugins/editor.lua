@@ -132,6 +132,10 @@ return {
         pickers = {
           find_files = { hidden = true },
         },
+        defaults = {
+          prompt_prefix = Core.icons.telescope.prompt_prefix,
+          selection_caret = Core.icons.telescope.selection_caret,
+        },
       })
 
       require("telescope").load_extension("fzf")

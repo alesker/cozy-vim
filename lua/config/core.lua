@@ -1,12 +1,12 @@
 Core = {}
 
 Core.icons = {
-
-  file = "",
-  files = "",
-  search = "",
-  list = "",
-  settings = "",
+  file = " ",
+  files = " ",
+  search = " ",
+  list = " ",
+  settings = " ",
+  prompt = "",
   git = {
     branch = "",
     diff = {
@@ -18,10 +18,10 @@ Core.icons = {
     },
   },
   diagnostics = {
-    info = "",
-    warn = "",
-    error = "",
-    hint = "",
+    info = " ",
+    warn = " ",
+    error = " ",
+    hint = " ",
   },
   statusline = {
     separator = "|",
@@ -36,10 +36,21 @@ Core.icons.dashboard = {
   recent_files = Core.icons.files,
   find_text = Core.icons.search,
   config = Core.icons.settings,
-  restore_session = "",
-  lazy = "󰒲",
-  mason = "",
-  quit = "",
+  restore_session = " ",
+  lazy = "󰒲 ",
+  mason = " ",
+  quit = " ",
+}
+
+Core.icons.telescope = {
+  prompt_prefix = Core.icons.prompt .. " ",
+  selection_caret = " ",
+}
+
+Core.icons.cmdline = {
+  cmdline = Core.icons.prompt,
+  search_down = Core.icons.search .. "",
+  search_up = Core.icons.search .. "",
 }
 
 vim.diagnostic.config({
