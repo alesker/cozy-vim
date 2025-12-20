@@ -60,6 +60,13 @@ vim.opt.listchars = {
   nbsp = "␣",
 }
 
+-- Folds
+
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+vim.o.foldmethod = "indent"
+vim.o.foldtext = ""
+
 -- Search and replace
 
 vim.o.ignorecase = true

@@ -1,5 +1,7 @@
 Core = {}
 
+Core.augroup_prefix = "neovim_"
+
 Core.icons = {
   file = " ",
   files = " ",
