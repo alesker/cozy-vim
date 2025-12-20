@@ -23,4 +23,11 @@ return {
       formatters_by_ft = { ruby = { "rubocop" } },
     },
   },
+  {
+    "mfussenegger/nvim-lint",
+    opts = {
+      linters_by_ft = { ruby = { "codespell" } },
+      linters = {},
+    },
+  },
 }
