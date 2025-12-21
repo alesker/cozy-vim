@@ -18,6 +18,7 @@ return {
   {
     "stevearc/conform.nvim",
     opts = {
+      ensure_installed = { "shfmt" },
       formatters_by_ft = {
         sh = { "shfmt" },
         bash = { "shfmt" },
@@ -28,6 +29,7 @@ return {
   {
     "mfussenegger/nvim-lint",
     opts = {
+      ensure_installed = { "shellcheck" },
       linters_by_ft = {
         sh = { "shellcheck" },
         bash = { "shellcheck" },

@@ -6,7 +6,7 @@ return {
   {
     "mason-org/mason-lspconfig.nvim",
     opts = {
-      ensure_installed = { "ruby_lsp", "rubocop" },
+      ensure_installed = { "ruby_lsp" },
     },
   },
   {
@@ -20,12 +20,14 @@ return {
   {
     "stevearc/conform.nvim",
     opts = {
+      ensure_installed = { "rubocop" },
       formatters_by_ft = { ruby = { "rubocop" } },
     },
   },
   {
     "mfussenegger/nvim-lint",
     opts = {
+      ensure_installed = { "codespell" },
       linters_by_ft = { ruby = { "codespell" } },
       linters = {},
     },

@@ -4,10 +4,10 @@ return {
     branch = "main",
     lazy = false,
     build = ":TSUpdate",
-    opts_extend = { "ensure_installed" },
     opts = {
       ensure_installed = {},
     },
+    opts_extend = { "ensure_installed" },
     config = function(_, opts)
       local treesitter = require("nvim-treesitter")
 

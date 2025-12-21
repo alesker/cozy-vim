@@ -6,7 +6,7 @@ return {
   {
     "mason-org/mason-lspconfig.nvim",
     opts = {
-      ensure_installed = { "lua_ls", "stylua" },
+      ensure_installed = { "lua_ls" },
     },
   },
   {
@@ -20,12 +20,14 @@ return {
   {
     "stevearc/conform.nvim",
     opts = {
+      ensure_installed = { "stylua" },
       formatters_by_ft = { lua = { "stylua" } },
     },
   },
   {
     "mfussenegger/nvim-lint",
     opts = {
+      ensure_installed = { "selene", "codespell" },
       linters_by_ft = { lua = { "selene", "codespell" } },
       linters = {},
     },

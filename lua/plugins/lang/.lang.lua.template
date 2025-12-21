@@ -19,12 +19,14 @@ return {
   {
     "stevearc/conform.nvim",
     opts = {
+      ensure_installed = {},
       formatters_by_ft = { lang = {} },
     },
   },
   {
     "mfussenegger/nvim-lint",
     opts = {
+      ensure_installed = {},
       linters_by_ft = { lang = {} },
       linters = {},
     },

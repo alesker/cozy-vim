@@ -5,8 +5,13 @@ return {
     opts = {
       events = { "BufWritePost", "BufReadPost", "InsertLeave" },
       linters_by_ft = {},
+      ensure_installed = {},
     },
+    opts_extend = { "ensure_installed" },
     config = function(_, opts)
+      local util = require("util")
+      util.ensure_installed(opts.ensure_installed)
+
       local lint = require("lint")
 
       lint.linters_by_ft = opts.linters_by_ft
