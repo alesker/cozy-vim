@@ -32,4 +32,37 @@ return {
       linters = {},
     },
   },
+
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    opts = {
+      sign = { enabled = false },
+      code = {
+        width = "block",
+        left_pad = 2,
+        right_pad = 2,
+      },
+      heading = {
+        width = "block",
+      },
+      pipe_table = {
+        -- stylua: ignore
+        border = {
+            "╭", "┬", "╮",
+            "├", "┼", "┤",
+            "╰", "┴", "╯",
+            "│", "─",
+        },
+        alignment_indicator = "═",
+      },
+    },
+    config = function(_, opts)
+      require("render-markdown").setup(opts)
+      Snacks.toggle({
+        name = "Render Markdown",
+        get = require("render-markdown").get,
+        set = require("render-markdown").set,
+      }):map("<leader>um")
+    end,
+  },
 }
