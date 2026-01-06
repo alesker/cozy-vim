@@ -18,22 +18,20 @@ return {
   {
     "stevearc/conform.nvim",
     opts = {
-      ensure_installed = { "jq", "yamlfmt", "tombi" },
+      ensure_installed = { "jq", "yamlfmt" },
       formatters_by_ft = {
         json = { "jq" },
         yaml = { "yamlfmt" },
-        toml = { "tombi" },
       },
     },
   },
   {
     "mfussenegger/nvim-lint",
     opts = {
-      ensure_installed = { "jq", "yamllint", "tombi" },
+      ensure_installed = { "jq", "yamllint" },
       linters_by_ft = {
         json = { "jq" },
         yaml = { "yamllint" },
-        toml = { "tombi" },
       },
       linters = {},
     },
