@@ -9,8 +9,8 @@ return {
     },
     opts_extend = { "ensure_installed" },
     config = function(_, opts)
-      local util = require("util")
-      util.ensure_installed(opts.ensure_installed)
+      local installer = require("util.mason_package_installer")
+      installer.ensure_installed(opts.ensure_installed)
 
       local lint = require("lint")
 
