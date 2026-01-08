@@ -12,8 +12,18 @@ return {
       vim.o.laststatus = 0
     end
   end,
+
   config = function()
     vim.o.laststatus = vim.g.lualine_laststatus
+
+    local function registry_recording()
+      local regname = vim.fn.reg_recording()
+      return " recording @" .. regname
+    end
+
+    local function should_show_registry_recording()
+      return vim.fn.reg_recording() ~= ""
+    end
 
     local function location()
       local line = vim.fn.line(".")
@@ -67,14 +77,9 @@ return {
           { "diff", padding = {} },
 
           {
-            function()
-              local reg = vim.fn.reg_recording()
-              return " recording to " .. reg
-            end,
+            registry_recording,
             color = { fg = "Red", gui = "italic,bold" },
-            cond = function()
-              return vim.fn.reg_recording() ~= ""
-            end,
+            cond = should_show_registry_recording,
           },
         },
         lualine_x = {
@@ -96,6 +101,7 @@ return {
           { total_lines, color = { gui = "bold" }, separator = { right = Core.icons.statusline.bubble_left } },
         },
       },
+
       extensions = {
         "lazy",
         "mason",
