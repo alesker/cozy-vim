@@ -72,9 +72,18 @@ return {
       {
         "<leader>?",
         function()
-          require("which-key").show({ global = false })
+          local opts = {
+            modes = { "n", "v", "x", "o", "i", "c", "t" },
+            show_plug = false,
+            lhs_filter = nil,
+            filter = function(keymap)
+              return keymap.desc and keymap.desc ~= ""
+            end,
+          }
+          local picker = require("util.telescope_keymaps_picker")
+          picker.create(opts):find()
         end,
-        desc = "Buffer Keymaps (which-key)",
+        desc = "Find Keymaps",
       },
     },
   },
