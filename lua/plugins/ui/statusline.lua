@@ -16,10 +16,14 @@ return {
     vim.o.laststatus = vim.g.lualine_laststatus
 
     local function location()
-      local total_lines = vim.fn.line("$")
       local line = vim.fn.line(".")
       local col = vim.fn.charcol(".")
-      return string.format("%3d:%-2d [%d]", line, col, total_lines)
+      return string.format("%3d:%-2d", line, col)
+    end
+
+    local function total_lines()
+      local lines = vim.fn.line("$")
+      return string.format("[%d]", lines)
     end
 
     require("lualine").setup({
@@ -30,6 +34,24 @@ return {
           left = Core.icons.statusline.bubble_left,
           right = Core.icons.statusline.bubble_right,
         },
+        theme = function()
+          -- need to do this because of the bug where section_separators disappear if b and c section bg colors are the same
+          local background = vim.opt.background:get()
+          local gruvbox_patched = require("lualine.themes.gruvbox_" .. background)
+
+          gruvbox_patched.insert.c.bg = gruvbox_patched.normal.c.bg
+          gruvbox_patched.insert.c.fg = gruvbox_patched.normal.c.fg
+          gruvbox_patched.visual.c.bg = gruvbox_patched.normal.c.bg
+          gruvbox_patched.visual.c.fg = gruvbox_patched.normal.c.fg
+          gruvbox_patched.replace.c.bg = gruvbox_patched.normal.c.bg
+          gruvbox_patched.replace.c.fg = gruvbox_patched.normal.c.fg
+          gruvbox_patched.command.c.bg = gruvbox_patched.normal.c.bg
+          gruvbox_patched.command.c.fg = gruvbox_patched.normal.c.fg
+          gruvbox_patched.inactive.c.bg = gruvbox_patched.normal.c.bg
+          gruvbox_patched.inactive.c.fg = gruvbox_patched.normal.c.fg
+
+          return gruvbox_patched
+        end,
       },
 
       sections = {
@@ -43,6 +65,17 @@ return {
         lualine_c = {
           { "branch", icon = Core.icons.git.branch },
           { "diff", padding = {} },
+
+          {
+            function()
+              local reg = vim.fn.reg_recording()
+              return " recording to " .. reg
+            end,
+            color = { fg = "Red", gui = "italic,bold" },
+            cond = function()
+              return vim.fn.reg_recording() ~= ""
+            end,
+          },
         },
         lualine_x = {
           {
@@ -59,7 +92,8 @@ return {
           { "lsp_status", symbols = { separator = " " .. Core.icons.statusline.separator .. " " } },
         },
         lualine_z = {
-          { location, separator = { right = Core.icons.statusline.bubble_left } },
+          { location, color = { gui = "italic,bold" }, padding = {} },
+          { total_lines, color = { gui = "bold" }, separator = { right = Core.icons.statusline.bubble_left } },
         },
       },
       extensions = {
