@@ -80,7 +80,7 @@ function M.create(opts)
       end,
     }),
     sorter = conf.generic_sorter({}),
-    attach_mappings = function(bufnr, map)
+    attach_mappings = function(bufnr, _)
       actions.select_default:replace(function()
         local entry = action_state.get_selected_entry()
         actions.close(bufnr)

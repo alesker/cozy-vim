@@ -30,6 +30,10 @@ Core.icons = {
     bubble_left = "",
     bubble_right = "",
   },
+  explorer = {
+    dir_collapsed = "",
+    dir_expanded = "",
+  },
 }
 
 Core.icons.dashboard = {

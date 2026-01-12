@@ -29,11 +29,21 @@ vim.keymap.set("n", "[b", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
 vim.keymap.set("n", "]b", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 vim.keymap.set("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
 vim.keymap.set("n", "<leader>`", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
+vim.keymap.set("n", "<leader>bd", function()
+  Snacks.bufdelete()
+end, { desc = "Delete Buffer" })
+vim.keymap.set("n", "<leader>bo", function()
+  Snacks.bufdelete.other()
+end, { desc = "Delete Other Buffers" })
+vim.keymap.set("n", "<leader>bD", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
 
 -- Add undo break-points
 vim.keymap.set("i", ",", ",<c-g>u")
 vim.keymap.set("i", ".", ".<c-g>u")
 vim.keymap.set("i", ";", ";<c-g>u")
+
+-- Quit
+vim.keymap.set("n", "<leader>q", "<cmd>qa<cr>", { desc = "Quit All" })
 
 -- Lazy
 vim.keymap.set("n", "<leader>l", "<cmd>Lazy<cr>", { desc = "Lazy" })
@@ -41,30 +51,11 @@ vim.keymap.set("n", "<leader>l", "<cmd>Lazy<cr>", { desc = "Lazy" })
 -- Mason
 vim.keymap.set("n", "<leader>m", "<cmd>Mason<cr>", { desc = "Mason" })
 
--- New file
-vim.keymap.set("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New File" })
-
 -- Clear search
 vim.keymap.set({ "i", "n", "s" }, "<Esc>", function()
   vim.cmd("nohlsearch")
   return "<Esc>"
 end, { expr = true, desc = "Escape and Clear hlsearch" })
-
--- location list
-vim.keymap.set("n", "<leader>xl", function()
-  local success, err = pcall(vim.fn.getloclist(0, { winid = 0 }).winid ~= 0 and vim.cmd.lclose or vim.cmd.lopen)
-  if not success and err then
-    vim.notify(err, vim.log.levels.ERROR)
-  end
-end, { desc = "Location List" })
-
--- quickfix list
-vim.keymap.set("n", "<leader>xq", function()
-  local success, err = pcall(vim.fn.getqflist({ winid = 0 }).winid ~= 0 and vim.cmd.cclose or vim.cmd.copen)
-  if not success and err then
-    vim.notify(err, vim.log.levels.ERROR)
-  end
-end, { desc = "Quickfix List" })
 
 local diagnostic_goto = function(next, severity)
   return function()
@@ -75,6 +66,7 @@ local diagnostic_goto = function(next, severity)
     })
   end
 end
+
 vim.keymap.set("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
 vim.keymap.set("n", "]d", diagnostic_goto(true), { desc = "Next Diagnostic" })
 vim.keymap.set("n", "[d", diagnostic_goto(false), { desc = "Prev Diagnostic" })
@@ -92,18 +84,19 @@ Snacks.toggle.inlay_hints():map("<leader>uh")
 Snacks.toggle.treesitter():map("<leader>uT")
 Snacks.toggle.dim():map("<leader>uD")
 Snacks.toggle.indent():map("<leader>ug")
+
 Snacks.toggle.profiler():map("<leader>dpp")
 Snacks.toggle.profiler_highlights():map("<leader>dph")
 
 Snacks.toggle({
   get = function()
-    return not vim.g.hard_mode
+    return vim.g.hard_mode
   end,
   set = function(state)
-    vim.g.hard_mode = not state
+    vim.g.hard_mode = state
 
     local function toggleKey(key)
-      local value = not state and "<Nop>" or key
+      local value = state and "<Nop>" or key
       vim.keymap.set({ "n", "i", "v" }, key, value)
     end
 
@@ -111,12 +104,17 @@ Snacks.toggle({
     toggleKey("<Down>")
     toggleKey("<Left>")
     toggleKey("<Right>")
+
+    toggleKey("<C-w><Up>")
+    toggleKey("<C-w><Down>")
+    toggleKey("<C-w><Left>")
+    toggleKey("<C-w><Right>")
+
     toggleKey("<Del>")
     toggleKey("<BS>")
+
+    toggleKey("<LeftMouse>")
+    toggleKey("<RightMouse>")
   end,
   name = "Hard Mode",
 }):map("<leader>uH")
-
----------------------------------------------------
-
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })

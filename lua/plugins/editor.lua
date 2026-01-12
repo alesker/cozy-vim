@@ -1,28 +1,5 @@
 return {
   {
-    "nvim-neo-tree/neo-tree.nvim",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
-      "nvim-tree/nvim-web-devicons",
-    },
-    config = function()
-      require("neo-tree").setup({
-        filesystem = {
-          filtered_items = {
-            visible = false,
-            hide_dotfiles = false,
-            hide_gitignored = true,
-            never_show = {
-              ".DS_Store",
-            },
-          },
-        },
-      })
-      vim.keymap.set("n", "-", ":Neotree toggle<CR>")
-    end,
-  },
-  {
     "folke/flash.nvim",
     event = "VeryLazy",
     vscode = true,
@@ -53,39 +30,24 @@ return {
       preset = "helix",
       spec = {
         mode = { "n", "x" },
+        { "<leader>b", group = "buffer" },
         { "<leader>c", group = "code" },
         { "<leader>d", group = "debug" },
         { "<leader>dp", group = "profiler" },
-        { "<leader>f", group = "file/find" },
+        { "<leader>f", group = "find" },
         { "<leader>g", group = "git" },
+        { "<leader>i", group = "insights" },
+        { "<leader>n", group = "notifications" },
+        { "<leader>p", group = "picker" },
         { "<leader>s", group = "search" },
         { "<leader>u", group = "ui" },
-        { "<leader>x", group = "diagnostics/quickfix" },
         { "[", group = "prev" },
         { "]", group = "next" },
         { "g", group = "goto" },
-        { "gs", group = "surround" },
         { "z", group = "fold" },
       },
     },
-    keys = {
-      {
-        "<leader>?",
-        function()
-          local opts = {
-            modes = { "n", "v", "x", "o", "i", "c", "t" },
-            show_plug = false,
-            lhs_filter = nil,
-            filter = function(keymap)
-              return keymap.desc and keymap.desc ~= ""
-            end,
-          }
-          local picker = require("util.telescope_keymaps_picker")
-          picker.create(opts):find()
-        end,
-        desc = "Find Keymaps",
-      },
-    },
+    keys = {},
   },
   {
     "folke/snacks.nvim",
@@ -95,6 +57,72 @@ return {
       indent = { enabled = true },
       words = { enabled = true },
     },
+  },
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      "nvim-tree/nvim-web-devicons",
+    },
+    opts = {
+      filesystem = {
+        bind_to_cwd = false,
+        follow_current_file = { enabled = true },
+        use_libuv_file_watcher = true,
+        filtered_items = {
+          visible = false,
+          hide_dotfiles = false,
+          hide_gitignored = true,
+          never_show = {
+            ".DS_Store",
+          },
+        },
+      },
+      window = {
+        mappings = {
+          ["l"] = "open",
+          ["h"] = "close_node",
+          ["<space>"] = "none",
+          ["Y"] = {
+            function(state)
+              local node = state.tree:get_node()
+              local path = node:get_id()
+              vim.fn.setreg("+", path, "c")
+            end,
+            desc = "Copy Path to Clipboard",
+          },
+          ["P"] = { "toggle_preview", config = { use_float = true } },
+        },
+      },
+      default_component_configs = {
+        indent = {
+          with_expanders = true,
+          expander_collapsed = Core.icons.explorer.dir_collapsed,
+          expander_expanded = Core.icons.explorer.dir_expanded,
+          expander_highlight = "NeoTreeExpander",
+        },
+      },
+      keys = {},
+    },
+    config = function(_, opts)
+      local function on_move(data)
+        Snacks.rename.on_rename_file(data.source, data.destination)
+      end
+
+      local events = require("neo-tree.events")
+      opts.event_handlers = opts.event_handlers or {}
+      vim.list_extend(opts.event_handlers, {
+        { event = events.FILE_MOVED, handler = on_move },
+        { event = events.FILE_RENAMED, handler = on_move },
+      })
+
+      require("neo-tree").setup(opts)
+
+      vim.keymap.set("n", "<leader>e", function()
+        require("neo-tree.command").execute({ toggle = true })
+      end, { desc = "Toggle" })
+    end,
   },
   {
     "lewis6991/gitsigns.nvim",
@@ -123,15 +151,99 @@ return {
     },
   },
   {
+    "folke/trouble.nvim",
+    cmd = { "Trouble" },
+    event = "VeryLazy",
+    opts = {
+      warn_no_results = false,
+      open_no_results = true,
+      win = { size = 0.25 },
+      modes = {
+        symbols = {
+          preview = {
+            type = "float",
+            border = "rounded",
+            relative = "editor",
+            position = { 0.5, 0.5 },
+            size = { width = 0.5, height = 0.5 },
+          },
+        },
+      },
+    },
+
+    keys = {
+      { "<leader>cs", "<cmd>Trouble lsp toggle<cr>", desc = "Symbols" },
+      { "<leader>co", "<cmd>Trouble symbols toggle<cr>", desc = "Outline" },
+
+      { "<leader>id", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics" },
+      { "<leader>ix", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Current Buffer Diagnostics" },
+      { "<leader>iq", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix List" },
+      { "<leader>il", "<cmd>Trouble loclist toggle<cr>", desc = "Location List" },
+    },
+    config = function(_, opts)
+      local trouble = require("trouble")
+      trouble.setup(opts)
+
+      local function jump(command, fallback)
+        if trouble.is_open() then
+          pcall(command)
+        elseif fallback then
+          local ok, err = pcall(fallback)
+          if not ok then
+            vim.notify(err, vim.log.levels.ERROR)
+          end
+        end
+      end
+
+      local function next(fallback)
+        ---@diagnostic disable-next-line: missing-parameter, missing-fields
+        jump(trouble.next({ skip_groups = true, jump = true }), fallback)
+      end
+      local function prev(fallback)
+        ---@diagnostic disable-next-line: missing-parameter, missing-fields
+        jump(trouble.prev({ skip_groups = true, jump = true }), fallback)
+      end
+
+      vim.keymap.set("n", "[i", prev, { desc = "Previous Insight" })
+      vim.keymap.set("n", "]i", next, { desc = "Next Insight" })
+
+      vim.keymap.set("n", "[q", function()
+        prev(vim.cmd.cprev)
+      end, { desc = "Previous Quickfix" })
+      vim.keymap.set("n", "]q", function()
+        next(vim.cmd.cnext)
+      end, { desc = "Next Quickfix" })
+
+      vim.keymap.set("n", "[l", function()
+        prev(vim.cmd.lprev)
+      end, { desc = "Previous Location" })
+      vim.keymap.set("n", "]l", function()
+        next(vim.cmd.lnext)
+      end, { desc = "Next Location" })
+    end,
+  },
+  {
     "nvim-telescope/telescope.nvim",
     event = "VimEnter",
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope-ui-select.nvim",
       "nvim-tree/nvim-web-devicons",
+      "nvim-telescope/telescope-ui-select.nvim",
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
     },
     config = function()
+      local actions = require("telescope.actions")
+
+      local function open_trouble_qf(prompt_bufnr)
+        actions.smart_send_to_qflist(prompt_bufnr)
+        require("trouble").open({ mode = "qflist", focus = true })
+      end
+
+      local function open_trouble_loc(prompt_bufnr)
+        actions.smart_send_to_loclist(prompt_bufnr)
+        require("trouble").open({ mode = "loclist", focus = true })
+      end
+
       require("telescope").setup({
         extensions = {
           ["ui-select"] = {
@@ -144,6 +256,16 @@ return {
         defaults = {
           prompt_prefix = Core.icons.telescope.prompt_prefix,
           selection_caret = Core.icons.telescope.selection_caret,
+          mappings = {
+            i = {
+              ["<C-q>"] = open_trouble_qf,
+              ["<C-l>"] = open_trouble_loc,
+            },
+            n = {
+              ["<C-q>"] = open_trouble_qf,
+              ["<C-l>"] = open_trouble_loc,
+            },
+          },
         },
       })
 
@@ -152,53 +274,57 @@ return {
       require("telescope").load_extension("noice")
 
       local builtin = require("telescope.builtin")
-      vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
-      vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
-      vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })
-      vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
-      vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
-      vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
-      vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
-      vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
-      vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
 
-      vim.keymap.set("n", "<leader>/", function()
-        builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
-          winblend = 10,
-          previewer = false,
-        }))
-      end, { desc = "[/] Fuzzily search in current buffer" })
+      vim.keymap.set("n", "<leader><leader>", builtin.resume, { desc = "Resume Telescope" })
+      vim.keymap.set("n", "<leader>:", builtin.command_history, { desc = "Command History" })
 
-      vim.keymap.set("n", "<leader>s/", function()
-        builtin.live_grep({
-          grep_open_files = true,
-          prompt_title = "Live Grep in Open Files",
-        })
-      end, { desc = "[S]earch [/] in Open Files" })
+      -- shortcuts
 
-      vim.keymap.set("n", "<leader>sn", function()
-        builtin.find_files({ cwd = vim.fn.stdpath("config") })
-      end, { desc = "[S]earch [N]eovim files" })
+      vim.keymap.set("n", "<leader>.", "<leader>ff", { desc = "Find Files", remap = true })
+      vim.keymap.set("n", "<leader>,", "<leader>fb", { desc = "Find Buffers", remap = true })
+      vim.keymap.set("n", "<leader>/", "<leader>sf", { desc = "Search Files", remap = true })
+      vim.keymap.set("n", "<leader>?", "<leader>sb", { desc = "Search Buffers", remap = true })
+
+      -- find
+
+      vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Files" })
+      vim.keymap.set("n", "<leader>fr", builtin.oldfiles, { desc = "Files (Recent)" })
+      vim.keymap.set("n", "<leader>fb", function()
+        builtin.buffers({ sort_mru = true, sort_lastused = true })
+      end, { desc = "Buffers" })
+      vim.keymap.set({ "n", "x" }, "<leader>fw", builtin.grep_string, { desc = "Word/Selection" })
+
+      -- search
+
+      vim.keymap.set("n", "<leader>sf", builtin.live_grep, { desc = "Files" })
+      vim.keymap.set("n", "<leader>sb", function()
+        builtin.live_grep({ grep_open_files = true })
+      end, { desc = "Buffers" })
+      vim.keymap.set("n", "<leader>s.", builtin.current_buffer_fuzzy_find, { desc = "Current Buffer" })
+
+      vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "Help Pages" })
+      vim.keymap.set("n", "<leader>sr", builtin.registers, { desc = "Registers" })
+      vim.keymap.set("n", "<leader>sk", function()
+        local opts = {
+          modes = { "n", "v", "x", "o", "i", "c", "t" },
+          show_plug = false,
+          lhs_filter = nil,
+          filter = function(keymap)
+            return keymap.desc and keymap.desc ~= ""
+          end,
+        }
+        local picker = require("util.telescope_keymaps_picker")
+        picker.create(opts):find()
+      end, { desc = "Keymaps" })
+
+      -- pickers
+
+      vim.keymap.set("n", "<leader>pc", builtin.commands, { desc = "Commands" })
+      vim.keymap.set("n", "<leader>pt", builtin.builtin, { desc = "Telescope" })
+      vim.keymap.set("n", "<leader>po", builtin.vim_options, { desc = "Options" })
+      vim.keymap.set("n", "<leader>ps", function()
+        builtin.colorscheme({ enable_preview = true })
+      end, { desc = "Colorschemes" })
     end,
-  },
-  {
-    "folke/trouble.nvim",
-    cmd = { "Trouble" },
-    opts = {
-      modes = {
-        lsp = {
-          win = { position = "right" },
-        },
-      },
-    },
-    keys = {
-      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics (Trouble)" },
-      { "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Buffer Diagnostics (Trouble)" },
-      { "<leader>cs", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols (Trouble)" },
-      { "<leader>cS", "<cmd>Trouble lsp toggle<cr>", desc = "LSP references/definitions/... (Trouble)" },
-      { "<leader>xL", "<cmd>Trouble loclist toggle<cr>", desc = "Location List (Trouble)" },
-      { "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix List (Trouble)" },
-    },
   },
 }
