@@ -36,9 +36,10 @@ return {
         { "<leader>dp", group = "profiler" },
         { "<leader>f", group = "find" },
         { "<leader>g", group = "git" },
-        { "<leader>i", group = "insights" },
+        { "<leader>h", group = "harpoon", icon = { icon = Core.icons.harpoon, color = "orange" } },
+        { "<leader>i", group = "insights", icon = { icon = Core.icons.insights, color = "purple" } },
         { "<leader>n", group = "notifications" },
-        { "<leader>p", group = "picker" },
+        { "<leader>p", group = "picker", icon = { icon = Core.icons.list, color = "green" } },
         { "<leader>s", group = "search" },
         { "<leader>u", group = "ui" },
         { "[", group = "prev" },
@@ -46,8 +47,15 @@ return {
         { "g", group = "goto" },
         { "z", group = "fold" },
       },
+      icons = {
+        mappings = true,
+        rules = {
+          { pattern = "throw harpoon", icon = Core.icons.target, color = "orange" },
+          { pattern = "lazy", icon = Core.icons.lazy, color = "yellow" },
+          { pattern = "mason", icon = Core.icons.mason, color = "cyan" },
+        },
+      },
     },
-    keys = {},
   },
   {
     "folke/snacks.nvim",
@@ -57,6 +65,55 @@ return {
       indent = { enabled = true },
       words = { enabled = true },
     },
+  },
+  {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {
+      menu = {
+        width = vim.api.nvim_win_get_width(0) - 4,
+      },
+      settings = {
+        save_on_toggle = true,
+      },
+    },
+    config = function(_, opts)
+      local harpoon = require("harpoon")
+
+      harpoon.setup(opts)
+
+      local function tab_list(id)
+        local key = "tab:" .. tostring(id or vim.api.nvim_get_current_tabpage())
+        return harpoon:list(key)
+      end
+
+      vim.keymap.set("n", "<leader>hx", function()
+        tab_list():add()
+      end, { desc = "Harpoon File" })
+      vim.keymap.set("n", "<leader>hh", function()
+        harpoon.ui:toggle_quick_menu(tab_list())
+      end, { desc = "Toggle Menu" })
+
+      vim.keymap.set("n", "<leader>x", "<leader>hx", { desc = "Throw Harpoon", remap = true })
+      vim.keymap.set("n", "<M-`>", "<leader>hh", { desc = "Harpooned Files", remap = true })
+
+      for i = 1, 4 do
+        vim.keymap.set("n", "<leader>h" .. i, function()
+          tab_list():select(i)
+        end, { desc = "Harpoon to File " .. i })
+        vim.keymap.set("n", "<M-" .. i .. ">", "<leader>h" .. i, { desc = "Harpoon to File " .. i, remap = true })
+      end
+
+      vim.api.nvim_create_autocmd("TabClosed", {
+        callback = function(args)
+          local id = args.file
+          pcall(function()
+            tab_list(id):clear()
+          end)
+        end,
+      })
+    end,
   },
   {
     "nvim-neo-tree/neo-tree.nvim",
@@ -121,7 +178,7 @@ return {
 
       vim.keymap.set("n", "<leader>e", function()
         require("neo-tree.command").execute({ toggle = true })
-      end, { desc = "Toggle" })
+      end, { desc = "Toggle Explorer" })
     end,
   },
   {
@@ -230,6 +287,7 @@ return {
       "nvim-tree/nvim-web-devicons",
       "nvim-telescope/telescope-ui-select.nvim",
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      "LukasPietzschmann/telescope-tabs",
     },
     config = function()
       local actions = require("telescope.actions")
@@ -272,11 +330,11 @@ return {
       require("telescope").load_extension("fzf")
       require("telescope").load_extension("ui-select")
       require("telescope").load_extension("noice")
+      require("telescope").load_extension("telescope-tabs")
 
       local builtin = require("telescope.builtin")
 
       vim.keymap.set("n", "<leader><leader>", builtin.resume, { desc = "Resume Telescope" })
-      vim.keymap.set("n", "<leader>:", builtin.command_history, { desc = "Command History" })
 
       -- shortcuts
 
@@ -293,6 +351,7 @@ return {
         builtin.buffers({ sort_mru = true, sort_lastused = true })
       end, { desc = "Buffers" })
       vim.keymap.set({ "n", "x" }, "<leader>fw", builtin.grep_string, { desc = "Word/Selection" })
+      vim.keymap.set("n", "<leader>ft", require("telescope-tabs").list_tabs, { desc = "Tabs" })
 
       -- search
 
@@ -300,9 +359,9 @@ return {
       vim.keymap.set("n", "<leader>sb", function()
         builtin.live_grep({ grep_open_files = true })
       end, { desc = "Buffers" })
-      vim.keymap.set("n", "<leader>s.", builtin.current_buffer_fuzzy_find, { desc = "Current Buffer" })
-
-      vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "Help Pages" })
+      vim.keymap.set("n", "<leader>sc", builtin.current_buffer_fuzzy_find, { desc = "Current Buffer" })
+      vim.keymap.set("n", "<leader>sh", builtin.command_history, { desc = "Command History" })
+      vim.keymap.set("n", "<leader>s?", builtin.help_tags, { desc = "Help Pages" })
       vim.keymap.set("n", "<leader>sr", builtin.registers, { desc = "Registers" })
       vim.keymap.set("n", "<leader>sk", function()
         local opts = {

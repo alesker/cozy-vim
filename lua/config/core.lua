@@ -2,6 +2,10 @@ Core = {}
 
 Core.augroup_prefix = "neovim_"
 
+Core.create_augroup = function(name)
+  return vim.api.nvim_create_augroup(Core.augroup_prefix .. name, { clear = true })
+end
+
 Core.icons = {
   file = " ",
   files = " ",
@@ -34,6 +38,11 @@ Core.icons = {
     dir_collapsed = "",
     dir_expanded = "",
   },
+  harpoon = "󱡅 ",
+  target = "󰣉 ",
+  insights = "󰉹 ",
+  lazy = "󰒲 ",
+  mason = " ",
 }
 
 Core.icons.dashboard = {
@@ -43,8 +52,8 @@ Core.icons.dashboard = {
   find_text = Core.icons.search,
   config = Core.icons.settings,
   restore_session = " ",
-  lazy = "󰒲 ",
-  mason = " ",
+  lazy = Core.icons.lazy,
+  mason = Core.icons.mason,
   quit = " ",
 }
 

@@ -18,7 +18,7 @@ return {
       end
 
       vim.api.nvim_create_autocmd("FileType", {
-        group = vim.api.nvim_create_augroup(Core.augroup_prefix .. "treesitter", { clear = true }),
+        group = Core.create_augroup("treesitter"),
         callback = function(ev)
           local ft = vim.bo[ev.buf].filetype
           local lang = vim.treesitter.language.get_lang(ft) or ft

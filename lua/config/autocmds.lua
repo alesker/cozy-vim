@@ -1,10 +1,6 @@
-local function augroup(name)
-  return vim.api.nvim_create_augroup(Core.augroup_prefix .. name, { clear = true })
-end
-
 -- Check if we need to reload the file when it changed
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
-  group = augroup("checktime"),
+  group = Core.create_augroup("checktime"),
   callback = function()
     if vim.o.buftype ~= "nofile" then
       vim.cmd("checktime")
@@ -14,7 +10,7 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 
 -- Highlight on yank
 vim.api.nvim_create_autocmd("TextYankPost", {
-  group = augroup("highlight_yank"),
+  group = Core.create_augroup("highlight_yank"),
   callback = function()
     vim.hl.on_yank()
   end,
@@ -22,7 +18,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- Go to the last visited line of code when opening a buffer
 vim.api.nvim_create_autocmd("BufReadPost", {
-  group = augroup("last_loc"),
+  group = Core.create_augroup("last_loc"),
   callback = function(event)
     local exclude = { "gitcommit" }
     local buf = event.buf
@@ -40,7 +36,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 
 -- Close certain filetypes with <q>
 vim.api.nvim_create_autocmd("FileType", {
-  group = augroup("close_with_q"),
+  group = Core.create_augroup("close_with_q"),
   pattern = {
     "checkhealth",
     "gitsigns-blame",

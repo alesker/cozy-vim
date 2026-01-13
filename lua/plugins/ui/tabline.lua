@@ -3,21 +3,16 @@ return {
     "akinsho/bufferline.nvim",
     event = "VeryLazy",
     keys = {
-      { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Toggle Pin" },
+      { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Pin Buffer" },
       { "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete Non-Pinned Buffers" },
-      { "<leader>br", "<Cmd>BufferLineCloseRight<CR>", desc = "Delete Buffers to the Right" },
-      { "<leader>bl", "<Cmd>BufferLineCloseLeft<CR>", desc = "Delete Buffers to the Left" },
       { "<S-h>", "<cmd>BufferLineCyclePrev<cr>", desc = "Prev Buffer" },
       { "<S-l>", "<cmd>BufferLineCycleNext<cr>", desc = "Next Buffer" },
       { "[b", "<cmd>BufferLineCyclePrev<cr>", desc = "Prev Buffer" },
       { "]b", "<cmd>BufferLineCycleNext<cr>", desc = "Next Buffer" },
-      { "[B", "<cmd>BufferLineMovePrev<cr>", desc = "Move buffer prev" },
-      { "]B", "<cmd>BufferLineMoveNext<cr>", desc = "Move buffer next" },
     },
     opts = {
       options = {
         diagnostics = "nvim_lsp",
-        always_show_bufferline = false,
         offsets = {
           {
             filetype = "neo-tree",
@@ -31,5 +26,23 @@ return {
         },
       },
     },
+    config = function(_, opts)
+      require("bufferline").setup(opts)
+      vim.opt.showtabline = 0
+
+      vim.api.nvim_create_autocmd({ "BufEnter" }, {
+        group = Core.create_augroup("tabline_toggle"),
+        callback = function(ev)
+          local ft = vim.bo[ev.buf].filetype
+
+          if ft ~= "alpha" then
+            vim.opt.showtabline = 2
+          else
+            vim.opt.showtabline = 0
+          end
+        end,
+      })
+    end,
   },
+  { "tiagovla/scope.nvim", config = true },
 }
