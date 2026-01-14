@@ -20,7 +20,7 @@ function M.setup(opts)
   end
 
   vim.api.nvim_create_autocmd("RecordingEnter", {
-    group = Core.create_augroup("toggle_macro_screenkey"),
+    group = Core.create_augroup("show_macro_screenkey"),
     callback = function()
       screenkey.setup(macro_opts)
       toggle_screenkey(true)
@@ -28,7 +28,7 @@ function M.setup(opts)
   })
 
   vim.api.nvim_create_autocmd("RecordingLeave", {
-    group = Core.create_augroup("toggle_macro_screenkey"),
+    group = Core.create_augroup("hide_macro_screenkey"),
     callback = function()
       toggle_screenkey(false)
       screenkey.setup(opts)
