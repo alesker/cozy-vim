@@ -29,3 +29,6 @@ require("lazy").setup({
 
 require("config.keymaps")
 require("config.autocmds")
+
+-- Remove training wheels
+Snacks.toggle.get("hard_mode"):set(true)

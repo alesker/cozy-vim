@@ -93,26 +93,39 @@ Snacks.toggle({
   set = function(state)
     vim.g.hard_mode = state
 
-    local function toggleKey(key)
+    local function toggle_key(key)
       local value = state and "<Nop>" or key
-      vim.keymap.set({ "n", "i", "v" }, key, value)
+      vim.keymap.set({ "n", "i", "v" }, key, value, { noremap = true, silent = true })
     end
 
-    toggleKey("<Up>")
-    toggleKey("<Down>")
-    toggleKey("<Left>")
-    toggleKey("<Right>")
+    toggle_key("<Up>")
+    toggle_key("<Down>")
+    toggle_key("<Left>")
+    toggle_key("<Right>")
 
-    toggleKey("<C-w><Up>")
-    toggleKey("<C-w><Down>")
-    toggleKey("<C-w><Left>")
-    toggleKey("<C-w><Right>")
+    toggle_key("<C-w><Up>")
+    toggle_key("<C-w><Down>")
+    toggle_key("<C-w><Left>")
+    toggle_key("<C-w><Right>")
 
-    toggleKey("<Del>")
-    toggleKey("<BS>")
+    toggle_key("<Del>")
+    toggle_key("<BS>")
 
-    toggleKey("<LeftMouse>")
-    toggleKey("<RightMouse>")
+    toggle_key("<LeftMouse>")
+    toggle_key("<RightMouse>")
   end,
   name = "Hard Mode",
 }):map("<leader>uH")
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = Core.create_augroup("drop_hard_mode_in_telescope"),
+  pattern = { "TelescopePrompt", "TelescopeResults", "TelescopePreview" },
+  callback = function(event)
+    local function enable_key(key)
+      vim.keymap.set({ "n", "i", "v" }, key, key, { buffer = event.buf, noremap = true, silent = true })
+    end
+    enable_key("<BS>")
+    enable_key("<Left>")
+    enable_key("<Right>")
+  end,
+})
