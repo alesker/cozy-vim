@@ -41,6 +41,7 @@ return {
         { "<leader>n", group = "notifications" },
         { "<leader>p", group = "picker", icon = { icon = Core.icons.list, color = "green" } },
         { "<leader>s", group = "search" },
+        { "<leader>t", group = "tab" },
         { "<leader>u", group = "ui" },
         { "[", group = "prev" },
         { "]", group = "next" },

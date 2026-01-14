@@ -35,6 +35,16 @@ vim.keymap.set("n", "<leader>bo", function()
   Snacks.bufdelete.other()
 end, { desc = "Delete Other Buffers" })
 
+-- Tabs
+vim.keymap.set("n", "[t", "<cmd>tabprevious<cr>", { desc = "Prev Tab" })
+vim.keymap.set("n", "]t", "<cmd>tabnext<cr>", { desc = "Next Tab" })
+vim.keymap.set("n", "<leader>tn", "<cmd>tabnew<cr>", { desc = "New Tab" })
+vim.keymap.set("n", "<leader>tc", "<cmd>tabclose<cr>", { desc = "Close Tab" })
+vim.keymap.set("n", "<leader>tc", "<cmd>tabclose<cr>", { desc = "Close Tab" })
+for i = 1, 4 do
+  vim.keymap.set("n", "<leader>t" .. i, i .. "gt", { desc = "Switch to Tab " .. i })
+end
+
 -- Add undo break-points
 vim.keymap.set("i", ",", ",<c-g>u")
 vim.keymap.set("i", ".", ".<c-g>u")
