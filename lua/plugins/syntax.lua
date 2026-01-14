@@ -19,16 +19,16 @@ return {
 
       vim.api.nvim_create_autocmd("FileType", {
         group = Core.create_augroup("treesitter"),
-        callback = function(ev)
-          local ft = vim.bo[ev.buf].filetype
+        callback = function(event)
+          local ft = vim.bo[event.buf].filetype
           local lang = vim.treesitter.language.get_lang(ft) or ft
 
-          local parser_exists = pcall(vim.treesitter.get_parser, ev.buf, lang)
+          local parser_exists = pcall(vim.treesitter.get_parser, event.buf, lang)
           if not parser_exists then
             return
           end
 
-          pcall(vim.treesitter.start, ev.buf, lang)
+          pcall(vim.treesitter.start, event.buf, lang)
 
           vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
           vim.wo[0][0].foldmethod = "expr"

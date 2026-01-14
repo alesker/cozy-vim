@@ -6,6 +6,10 @@ Core.create_augroup = function(name)
   return vim.api.nvim_create_augroup(Core.augroup_prefix .. name, { clear = true })
 end
 
+Core.tab_key = function(id)
+  return "tab:" .. tostring(id or vim.api.nvim_get_current_tabpage())
+end
+
 Core.icons = {
   file = " ",
   files = " ",

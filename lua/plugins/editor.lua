@@ -84,16 +84,21 @@ return {
       harpoon.setup(opts)
 
       local function tab_list(id)
-        local key = "tab:" .. tostring(id or vim.api.nvim_get_current_tabpage())
-        return harpoon:list(key)
+        return harpoon:list(Core.tab_key(id))
       end
 
       vim.keymap.set("n", "<leader>hx", function()
-        tab_list():add()
+        local matcher = require("util.harpoon_item_matcher")
+        if matcher.match(0) then
+          tab_list():remove()
+        else
+          tab_list():add()
+        end
+        vim.cmd("redrawtabline")
       end, { desc = "Harpoon File" })
       vim.keymap.set("n", "<leader>hh", function()
         harpoon.ui:toggle_quick_menu(tab_list())
-      end, { desc = "Toggle Menu" })
+      end, { desc = "Harpooned Files" })
 
       vim.keymap.set("n", "<leader>x", "<leader>hx", { desc = "Throw Harpoon", remap = true })
       vim.keymap.set("n", "<M-`>", "<leader>hh", { desc = "Harpooned Files", remap = true })
@@ -106,8 +111,8 @@ return {
       end
 
       vim.api.nvim_create_autocmd("TabClosed", {
-        callback = function(args)
-          local id = args.file
+        callback = function(event)
+          local id = event.file
           pcall(function()
             tab_list(id):clear()
           end)
@@ -137,6 +142,7 @@ return {
         },
       },
       window = {
+        width = 0.2,
         mappings = {
           ["l"] = "open",
           ["h"] = "close_node",
