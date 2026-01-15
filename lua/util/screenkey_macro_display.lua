@@ -1,4 +1,4 @@
-M = {}
+local M = {}
 
 function M.setup(opts)
   local screenkey = require("screenkey")

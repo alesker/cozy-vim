@@ -1,4 +1,4 @@
-M = {}
+local M = {}
 
 local notify = require("mason-core.notify")
 local registry = require("mason-registry")

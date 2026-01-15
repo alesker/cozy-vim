@@ -1,4 +1,4 @@
-M = {}
+local M = {}
 
 local harpoon = require("harpoon")
 local path = require("plenary.path")

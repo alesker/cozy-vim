@@ -1,4 +1,4 @@
-M = {}
+local M = {}
 
 local function keymaps(opts)
   local items = {}
@@ -15,7 +15,6 @@ local function keymaps(opts)
           mode = mode,
           lhs = lhs,
           desc = keymap.desc or "",
-          rhs = keymap.rhs or "",
         })
       end
     end
@@ -70,11 +69,10 @@ function M.create(opts)
       results = items,
       entry_maker = function(entry)
         return {
-          ordinal = table.concat({ entry.mode, entry.lhs, entry.desc, entry.rhs }),
+          ordinal = table.concat({ entry.mode, entry.lhs, entry.desc }),
           display = make_display,
           mode = entry.mode,
           lhs = entry.lhs,
-          rhs = entry.rhs,
           desc = entry.desc,
         }
       end,
