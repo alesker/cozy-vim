@@ -347,6 +347,7 @@ return {
 
       vim.keymap.set("n", "<leader>.", "<leader>ff", { desc = "Find Files", remap = true })
       vim.keymap.set("n", "<leader>,", "<leader>fb", { desc = "Find Buffers", remap = true })
+      vim.keymap.set("n", "<leader>*", "<leader>fw", { desc = "Find Word", remap = true })
       vim.keymap.set("n", "<leader>/", "<leader>sf", { desc = "Search Files", remap = true })
       vim.keymap.set("n", "<leader>?", "<leader>sb", { desc = "Search Buffers", remap = true })
 
@@ -391,6 +392,10 @@ return {
       vim.keymap.set("n", "<leader>ps", function()
         builtin.colorscheme({ enable_preview = true })
       end, { desc = "Colorschemes" })
+      vim.keymap.set("n", "<leader>p?", function()
+        local picker = require("util.telescope_cheatsheet_picker")
+        picker.create():find()
+      end, { desc = "Motions Cheatsheet" })
     end,
   },
 }
