@@ -122,100 +122,6 @@ return {
     end,
   },
   {
-    "nvim-neo-tree/neo-tree.nvim",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
-      "nvim-tree/nvim-web-devicons",
-    },
-    opts = {
-      filesystem = {
-        bind_to_cwd = false,
-        follow_current_file = { enabled = true },
-        use_libuv_file_watcher = true,
-        filtered_items = {
-          visible = false,
-          hide_dotfiles = false,
-          hide_gitignored = true,
-          never_show = {
-            ".DS_Store",
-          },
-        },
-      },
-      window = {
-        width = 0.2,
-        mappings = {
-          ["l"] = "open",
-          ["h"] = "close_node",
-          ["<space>"] = "none",
-          ["Y"] = {
-            function(state)
-              local node = state.tree:get_node()
-              local path = node:get_id()
-              vim.fn.setreg("+", path, "c")
-            end,
-            desc = "Copy Path to Clipboard",
-          },
-          ["P"] = { "toggle_preview", config = { use_float = true } },
-        },
-      },
-      default_component_configs = {
-        indent = {
-          with_expanders = true,
-          expander_collapsed = Core.icons.explorer.dir_collapsed,
-          expander_expanded = Core.icons.explorer.dir_expanded,
-          expander_highlight = "NeoTreeExpander",
-        },
-      },
-      keys = {},
-    },
-    config = function(_, opts)
-      local function on_move(data)
-        Snacks.rename.on_rename_file(data.source, data.destination)
-      end
-
-      local events = require("neo-tree.events")
-      opts.event_handlers = opts.event_handlers or {}
-      vim.list_extend(opts.event_handlers, {
-        { event = events.FILE_MOVED, handler = on_move },
-        { event = events.FILE_RENAMED, handler = on_move },
-      })
-
-      require("neo-tree").setup(opts)
-
-      vim.keymap.set("n", "<leader>e", function()
-        require("neo-tree.command").execute({ toggle = true })
-      end, { desc = "Toggle Explorer" })
-
-      Snacks.toggle({
-        get = function()
-          return vim.g.readonly_neotree
-        end,
-        set = function(state)
-          vim.g.readonly_neotree = state
-          local group = Core.create_augroup("readonly_neotree")
-          if state then
-            vim.api.nvim_create_autocmd("WinEnter", {
-              group = group,
-              callback = function()
-                if vim.bo.filetype == "neo-tree" then
-                  if not vim.w._allow_neotree_focus then
-                    vim.cmd("wincmd p")
-                  end
-                end
-              end,
-            })
-          else
-            vim.api.nvim_del_autocmd(group)
-          end
-        end,
-        name = "Readonly Neotree",
-      }):map("<leader>uN")
-
-      Snacks.toggle.get("readonly_neotree"):set(true)
-    end,
-  },
-  {
     "lewis6991/gitsigns.nvim",
     opts = {
       signs = {
@@ -314,6 +220,100 @@ return {
     end,
   },
   {
+    "nvim-neo-tree/neo-tree.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      "nvim-tree/nvim-web-devicons",
+    },
+    opts = {
+      filesystem = {
+        bind_to_cwd = false,
+        follow_current_file = { enabled = true },
+        use_libuv_file_watcher = true,
+        filtered_items = {
+          visible = false,
+          hide_dotfiles = false,
+          hide_gitignored = true,
+          never_show = {
+            ".DS_Store",
+          },
+        },
+      },
+      window = {
+        width = 0.2,
+        mappings = {
+          ["l"] = "open",
+          ["h"] = "close_node",
+          ["<space>"] = "none",
+          ["Y"] = {
+            function(state)
+              local node = state.tree:get_node()
+              local path = node:get_id()
+              vim.fn.setreg("+", path, "c")
+            end,
+            desc = "Copy Path to Clipboard",
+          },
+          ["P"] = { "toggle_preview", config = { use_float = true } },
+        },
+      },
+      default_component_configs = {
+        indent = {
+          with_expanders = true,
+          expander_collapsed = Core.icons.explorer.dir_collapsed,
+          expander_expanded = Core.icons.explorer.dir_expanded,
+          expander_highlight = "NeoTreeExpander",
+        },
+      },
+      keys = {},
+    },
+    config = function(_, opts)
+      local function on_move(data)
+        Snacks.rename.on_rename_file(data.source, data.destination)
+      end
+
+      local events = require("neo-tree.events")
+      opts.event_handlers = opts.event_handlers or {}
+      vim.list_extend(opts.event_handlers, {
+        { event = events.FILE_MOVED, handler = on_move },
+        { event = events.FILE_RENAMED, handler = on_move },
+      })
+
+      require("neo-tree").setup(opts)
+
+      vim.keymap.set("n", "<C-`>", function()
+        require("neo-tree.command").execute({ toggle = true })
+      end, { desc = "Toggle File Tree" })
+
+      Snacks.toggle({
+        get = function()
+          return vim.g.readonly_neotree
+        end,
+        set = function(state)
+          vim.g.readonly_neotree = state
+          local group = Core.create_augroup("readonly_neotree")
+          if state then
+            vim.api.nvim_create_autocmd("WinEnter", {
+              group = group,
+              callback = function()
+                if vim.bo.filetype == "neo-tree" then
+                  if not vim.w._allow_neotree_focus then
+                    vim.cmd("wincmd p")
+                  end
+                end
+              end,
+            })
+          else
+            vim.api.nvim_del_autocmd(group)
+          end
+        end,
+        name = "Readonly Neotree",
+      }):map("<leader>uN")
+
+      Snacks.toggle.get("readonly_neotree"):set(true)
+    end,
+  },
+  {
     "nvim-telescope/telescope.nvim",
     event = "VimEnter",
     dependencies = {
@@ -321,9 +321,11 @@ return {
       "nvim-tree/nvim-web-devicons",
       "nvim-telescope/telescope-ui-select.nvim",
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      "nvim-telescope/telescope-file-browser.nvim",
       "LukasPietzschmann/telescope-tabs",
     },
     config = function()
+      local telescope = require("telescope")
       local actions = require("telescope.actions")
 
       local function open_trouble_qf(prompt_bufnr)
@@ -336,7 +338,7 @@ return {
         require("trouble").open({ mode = "loclist", focus = true })
       end
 
-      require("telescope").setup({
+      telescope.setup({
         extensions = {
           ["ui-select"] = {
             require("telescope.themes").get_dropdown(),
@@ -346,6 +348,9 @@ return {
           find_files = { hidden = true },
         },
         defaults = {
+          file_ignore_patterns = {
+            "%.DS_Store$",
+          },
           prompt_prefix = Core.icons.telescope.prompt_prefix,
           selection_caret = Core.icons.telescope.selection_caret,
           mappings = {
@@ -361,10 +366,11 @@ return {
         },
       })
 
-      require("telescope").load_extension("fzf")
-      require("telescope").load_extension("ui-select")
-      require("telescope").load_extension("noice")
-      require("telescope").load_extension("telescope-tabs")
+      telescope.load_extension("fzf")
+      telescope.load_extension("ui-select")
+      telescope.load_extension("file_browser")
+      telescope.load_extension("noice")
+      telescope.load_extension("telescope-tabs")
 
       local builtin = require("telescope.builtin")
 
@@ -410,6 +416,19 @@ return {
         local picker = require("util.telescope_keymaps_picker")
         picker.create(opts):find()
       end, { desc = "Keymaps" })
+
+      -- file explorer
+      vim.keymap.set("n", "<leader>e", function()
+        telescope.extensions.file_browser.file_browser({
+          path = vim.fn.expand("%:p:h"),
+          grouped = true,
+          hidden = true,
+          respect_gitignore = true,
+          sorting_strategy = "ascending",
+          layout_config = { prompt_position = "top" },
+          prompt_title = "File Explorer",
+        })
+      end, { desc = "File Explorer", remap = true })
 
       -- pickers
 
