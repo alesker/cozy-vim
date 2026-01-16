@@ -186,6 +186,33 @@ return {
       vim.keymap.set("n", "<leader>e", function()
         require("neo-tree.command").execute({ toggle = true })
       end, { desc = "Toggle Explorer" })
+
+      Snacks.toggle({
+        get = function()
+          return vim.g.readonly_neotree
+        end,
+        set = function(state)
+          vim.g.readonly_neotree = state
+          local group = Core.create_augroup("readonly_neotree")
+          if state then
+            vim.api.nvim_create_autocmd("WinEnter", {
+              group = group,
+              callback = function()
+                if vim.bo.filetype == "neo-tree" then
+                  if not vim.w._allow_neotree_focus then
+                    vim.cmd("wincmd p")
+                  end
+                end
+              end,
+            })
+          else
+            vim.api.nvim_del_autocmd(group)
+          end
+        end,
+        name = "Readonly Neotree",
+      }):map("<leader>uN")
+
+      Snacks.toggle.get("readonly_neotree"):set(true)
     end,
   },
   {
