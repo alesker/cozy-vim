@@ -139,7 +139,18 @@ return {
   },
   {
     "stevearc/oil.nvim",
+    dependencies = {
+      "benomahony/oil-git.nvim",
+    },
     opts = {
+      view_options = {
+        show_hidden = false,
+        is_hidden_file = function(name, _)
+          -- hide only git-ignored files
+          vim.fn.system({ "git", "check-ignore", "-q", name })
+          return vim.v.shell_error == 0
+        end,
+      },
       float = {
         padding = 2,
         max_width = 0.75,
@@ -356,7 +367,6 @@ return {
           expander_highlight = "NeoTreeExpander",
         },
       },
-      keys = {},
     },
     config = function(_, opts)
       local function on_move(data)
