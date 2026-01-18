@@ -1,18 +1,19 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = { ensure_installed = { "lang" } },
+    opts = { ensure_installed = { "LANG" } },
   },
   {
     "mason-org/mason-lspconfig.nvim",
     opts = {
-      ensure_installed = {},
+      ensure_installed = { "LANG_LS" },
     },
   },
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
+        LANG_LS = {}
       },
     },
   },
@@ -20,14 +21,14 @@ return {
     "stevearc/conform.nvim",
     opts = {
       ensure_installed = {},
-      formatters_by_ft = { lang = {} },
+      formatters_by_ft = { LANG = {} },
     },
   },
   {
     "mfussenegger/nvim-lint",
     opts = {
       ensure_installed = {},
-      linters_by_ft = { lang = {} },
+      linters_by_ft = { LANG = {} },
       linters = {},
     },
   },
