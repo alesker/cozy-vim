@@ -25,11 +25,6 @@ return {
       end
 
       telescope.setup({
-        extensions = {
-          ["ui-select"] = {
-            require("telescope.themes").get_dropdown(),
-          },
-        },
         pickers = {
           find_files = { hidden = true },
         },
@@ -48,6 +43,11 @@ return {
               ["<C-q>"] = open_trouble_qf,
               ["<C-l>"] = open_trouble_loc,
             },
+          },
+        },
+        extensions = {
+          ["ui-select"] = {
+            require("telescope.themes").get_dropdown(),
           },
         },
       })

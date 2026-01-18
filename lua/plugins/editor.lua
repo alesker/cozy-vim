@@ -52,6 +52,7 @@ return {
         mappings = true,
         rules = {
           { pattern = "throw harpoon", icon = Core.icons.target, color = "orange" },
+          { pattern = "oil", icon = Core.icons.oil, color = "orange" },
           { pattern = "lazy", icon = Core.icons.lazy, color = "yellow" },
           { pattern = "mason", icon = Core.icons.mason, color = "cyan" },
         },
@@ -98,7 +99,11 @@ return {
         vim.cmd("redrawtabline")
       end, { desc = "Harpoon File" })
       vim.keymap.set("n", "<leader>hh", function()
-        harpoon.ui:toggle_quick_menu(tab_list())
+        harpoon.ui:toggle_quick_menu(tab_list(), {
+          title = " Harpoon ",
+          border = "rounded",
+          title_pos = "center",
+        })
       end, { desc = "Harpooned Files" })
 
       vim.keymap.set("n", "<leader>x", "<leader>hx", { desc = "Throw Harpoon", remap = true })
@@ -119,6 +124,92 @@ return {
           end)
         end,
       })
+
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "harpoon",
+        callback = function()
+          vim.wo.winhighlight = table.concat({
+            "Normal:Normal",
+            "FloatBorder:Normal",
+            "FloatTitle:Normal",
+          }, ",")
+        end,
+      })
+    end,
+  },
+  {
+    "stevearc/oil.nvim",
+    opts = {
+      float = {
+        padding = 2,
+        max_width = 0.75,
+        max_height = 0.75,
+        border = "rounded",
+        win_options = {
+          winblend = 0,
+          winhighlight = table.concat({
+            "Normal:Normal",
+            "FloatBorder:Normal",
+            "FloatTitle:Normal",
+          }, ","),
+        },
+        get_win_title = function()
+          local title = "Oil"
+          local dir = require("oil").get_current_dir()
+          if dir then
+            title = vim.fn.fnamemodify(dir, ":~:.")
+            title = title == "" and "./" or title
+          end
+          return string.format(" %s ", title)
+        end,
+        override = function(conf)
+          conf.title = ""
+          conf.title_pos = "center"
+          return conf
+        end,
+      },
+      confirmation = {
+        border = "rounded",
+        title_pos = "center",
+        max_width = 0.25,
+        max_height = 0.25,
+        win_options = {
+          winblend = 0,
+          winhighlight = table.concat({
+            "Normal:Normal",
+            "FloatBorder:Normal",
+            "FloatTitle:Normal",
+          }, ","),
+        },
+      },
+      preview_win = {
+        win_options = {
+          winhighlight = table.concat({
+            "Normal:Normal",
+            "FloatBorder:Normal",
+            "FloatTitle:Normal",
+          }, ","),
+        },
+      },
+    },
+    config = function(_, opts)
+      local oil = require("oil")
+
+      oil.setup(opts)
+
+      vim.api.nvim_create_autocmd("User", {
+        group = Core.create_augroup("oil_autopreview"),
+        pattern = "OilEnter",
+        callback = vim.schedule_wrap(function(args)
+          if vim.api.nvim_get_current_buf() == args.data.buf and oil.get_cursor_entry() then
+            oil.open_preview()
+          end
+        end),
+      })
+
+      vim.keymap.set("n", "<leader>o", function()
+        oil.toggle_float()
+      end, { desc = "Oil" })
     end,
   },
   {
