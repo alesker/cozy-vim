@@ -3,7 +3,10 @@ return {
     "saghen/blink.cmp",
     version = "1.*",
     opts = {
-      keymap = { preset = "enter" },
+      keymap = {
+        preset = "enter",
+        ["<A-y>"] = require("minuet").make_blink_map(),
+      },
       appearance = {
         nerd_font_variant = "mono",
       },
@@ -32,7 +35,21 @@ return {
         window = { border = "rounded" },
       },
       sources = {
-        default = { "lsp", "path", "snippets", "buffer" },
+        default = {
+          "lsp",
+          "path",
+          "snippets",
+          "buffer",
+        },
+        providers = {
+          minuet = {
+            name = "minuet",
+            module = "minuet.blink",
+            async = true,
+            timeout_ms = 2000,
+            score_offset = 50,
+          },
+        },
       },
     },
   },

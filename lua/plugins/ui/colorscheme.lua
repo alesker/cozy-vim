@@ -21,6 +21,8 @@ return {
         RenderMarkdownH5Bg = { bg = palette.neutral_aqua, fg = palette.light0 },
         RenderMarkdownH6Bg = { bg = palette.neutral_green, fg = palette.light0 },
 
+        MinuetVirtualText = { link = "Comment" },
+
         -- fix wonky sign background in neo-tree
         DiagnosticSignError = { link = "GruvboxRed" },
         DiagnosticSignWarn = { link = "GruvboxYellow" },
