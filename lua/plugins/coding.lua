@@ -4,19 +4,58 @@ return {
     version = "1.*",
     opts = {
       keymap = {
-        preset = "enter",
+        preset = "none",
+
+        ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
+        ["<C-e>"] = { "hide", "fallback" },
+        ["<CR>"] = { "select_and_accept", "fallback" },
+
+        ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
+        ["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
+
+        ["<Up>"] = { "select_prev", "fallback" },
+        ["<Down>"] = { "select_next", "fallback" },
+        ["<C-p>"] = { "select_prev", "fallback_to_mappings" },
+        ["<C-n>"] = { "select_next", "fallback_to_mappings" },
+        ["<C-k>"] = { "select_prev", "fallback_to_mappings" },
+        ["<C-j>"] = { "select_next", "fallback_to_mappings" },
+
+        ["<C-b>"] = { "scroll_documentation_up", "fallback" },
+        ["<C-f>"] = { "scroll_documentation_down", "fallback" },
+
+        ["<C-s>"] = { "show_signature", "hide_signature", "fallback" },
+
         ["<A-y>"] = require("minuet").make_blink_map(),
       },
       appearance = {
         nerd_font_variant = "mono",
       },
+      cmdline = {
+        keymap = {
+          ["<C-space>"] = { "show", "cancel", "fallback" },
+          ["<CR>"] = {
+            function(cmp)
+              if cmp.is_menu_visible() then
+                return cmp.select_and_accept()
+              end
+            end,
+            "fallback",
+          },
+        },
+      },
       completion = {
+        list = {
+          selection = {
+            auto_insert = false,
+          },
+        },
         accept = {
           auto_brackets = {
             enabled = true,
           },
         },
         menu = {
+          auto_show = true,
           draw = {
             treesitter = { "lsp" },
           },
