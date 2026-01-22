@@ -75,12 +75,13 @@ Core.icons.cmdline = {
 
 vim.diagnostic.config({
   underline = true,
-  update_in_insert = false,
+  update_in_insert = true,
 
   virtual_text = {
     spacing = 4,
     source = "if_many",
     prefix = "●",
+    current_line = true,
   },
   severity_sort = true,
   signs = {
@@ -90,5 +91,9 @@ vim.diagnostic.config({
       [vim.diagnostic.severity.ERROR] = Core.icons.diagnostics.error,
       [vim.diagnostic.severity.HINT] = Core.icons.diagnostics.hint,
     },
+  },
+  float = {
+    source = "if_many",
+    border = "rounded",
   },
 })
