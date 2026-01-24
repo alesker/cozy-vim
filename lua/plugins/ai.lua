@@ -45,5 +45,11 @@ return {
         },
       },
     },
+    config = function(_, opts)
+      require("minuet").setup(opts)
+      vim.api.nvim_set_hl(0, "MinuetVirtualText", {
+        link = "Comment",
+      })
+    end,
   },
 }

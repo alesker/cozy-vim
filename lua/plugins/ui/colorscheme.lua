@@ -7,6 +7,9 @@ return {
 
     gruvbox.setup({
       overrides = {
+        TreesitterContextBottom = { underline = true, italic = true, sp = palette.gray },
+        TreesitterContextLineNumberBottom = { underline = true, italic = true, sp = palette.gray },
+
         RenderMarkdownH1 = { fg = palette.neutral_orange },
         RenderMarkdownH2 = { fg = palette.neutral_yellow },
         RenderMarkdownH3 = { fg = palette.neutral_purple },
@@ -20,8 +23,6 @@ return {
         RenderMarkdownH4Bg = { bg = palette.neutral_blue, fg = palette.light0 },
         RenderMarkdownH5Bg = { bg = palette.neutral_aqua, fg = palette.light0 },
         RenderMarkdownH6Bg = { bg = palette.neutral_green, fg = palette.light0 },
-
-        MinuetVirtualText = { link = "Comment" },
 
         -- fix wonky sign background in neo-tree
         DiagnosticSignError = { link = "GruvboxRed" },

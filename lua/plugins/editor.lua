@@ -250,6 +250,34 @@ return {
     },
   },
   {
+    "nvim-treesitter/nvim-treesitter-context",
+    event = "VeryLazy",
+    opts = {
+      mode = "cursor",
+      max_lines = 3,
+    },
+    config = function(_, opts)
+      local context = require("treesitter-context")
+      context.setup(opts)
+
+      Snacks.toggle({
+        name = "Treesitter Context",
+        get = context.enabled,
+        set = function(state)
+          if state then
+            context.enable()
+          else
+            context.disable()
+          end
+        end,
+      }):map("<leader>uc")
+
+      vim.keymap.set("n", "gc", function()
+        require("treesitter-context").go_to_context(vim.v.count1)
+      end, { desc = "Goto context", silent = true })
+    end,
+  },
+  {
     "folke/trouble.nvim",
     cmd = { "Trouble" },
     event = "VeryLazy",
