@@ -27,8 +27,8 @@ return {
   {
     "mfussenegger/nvim-lint",
     opts = {
-      ensure_installed = { "codespell" },
-      linters_by_ft = { ruby = { "codespell" } },
+      ensure_installed = {},
+      linters_by_ft = { ruby = {} },
       linters = {},
     },
   },

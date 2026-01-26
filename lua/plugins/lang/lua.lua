@@ -27,8 +27,8 @@ return {
   {
     "mfussenegger/nvim-lint",
     opts = {
-      ensure_installed = { "selene", "codespell" },
-      linters_by_ft = { lua = { "selene", "codespell" } },
+      ensure_installed = { "selene" },
+      linters_by_ft = { lua = { "selene" } },
       linters = {},
     },
   },

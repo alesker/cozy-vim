@@ -6,18 +6,21 @@ return {
       "neovim/nvim-lspconfig",
     },
     opts = {
-      ensure_installed = {},
+      ensure_installed = { "codebook" },
     },
     opts_extend = { "ensure_installed" },
   },
   {
     "neovim/nvim-lspconfig",
     opts = {
-      servers = {},
+      servers = {
+        codebook = {},
+      },
     },
     config = vim.schedule_wrap(function(_, opts)
       for server, server_opts in pairs(opts.servers) do
         vim.lsp.config(server, server_opts)
+        vim.lsp.enable(server)
       end
 
       vim.keymap.del({ "n", "v" }, "gra")
