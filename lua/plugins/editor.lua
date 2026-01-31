@@ -107,13 +107,13 @@ return {
       end, { desc = "Harpooned Files" })
 
       vim.keymap.set("n", "<leader>x", "<leader>hx", { desc = "Throw Harpoon", remap = true })
-      vim.keymap.set("n", "<M-`>", "<leader>hh", { desc = "Harpooned Files", remap = true })
+      vim.keymap.set("n", "<C-`>", "<leader>hh", { desc = "Harpooned Files", remap = true })
 
       for i = 1, 4 do
         vim.keymap.set("n", "<leader>h" .. i, function()
           tab_list():select(i)
         end, { desc = "Harpoon to File " .. i })
-        vim.keymap.set("n", "<M-" .. i .. ">", "<leader>h" .. i, { desc = "Harpoon to File " .. i, remap = true })
+        vim.keymap.set("n", "<C-" .. i .. ">", "<leader>h" .. i, { desc = "Harpoon to File " .. i, remap = true })
       end
 
       vim.api.nvim_create_autocmd("TabClosed", {
@@ -143,6 +143,7 @@ return {
       "benomahony/oil-git.nvim",
     },
     opts = {
+      default_file_explorer = true,
       view_options = {
         show_hidden = false,
         is_hidden_file = function(name, _)
@@ -410,36 +411,9 @@ return {
 
       require("neo-tree").setup(opts)
 
-      vim.keymap.set("n", "<C-`>", function()
+      vim.keymap.set("n", "-", function()
         require("neo-tree.command").execute({ toggle = true })
       end, { desc = "Toggle File Tree" })
-
-      Snacks.toggle({
-        get = function()
-          return vim.g.readonly_neotree
-        end,
-        set = function(state)
-          vim.g.readonly_neotree = state
-          local group = Core.create_augroup("readonly_neotree")
-          if state then
-            vim.api.nvim_create_autocmd("WinEnter", {
-              group = group,
-              callback = function()
-                if vim.bo.filetype == "neo-tree" then
-                  if not vim.w._allow_neotree_focus then
-                    vim.cmd("wincmd p")
-                  end
-                end
-              end,
-            })
-          else
-            vim.api.nvim_del_autocmd(group)
-          end
-        end,
-        name = "Readonly Neotree",
-      }):map("<leader>uN")
-
-      Snacks.toggle.get("readonly_neotree"):set(true)
     end,
   },
 }
