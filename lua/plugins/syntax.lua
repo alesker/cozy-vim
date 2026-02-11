@@ -48,21 +48,25 @@ return {
         set_jumps = true,
         keys = {
           goto_next_start = {
+            ["]]"] = { query = "@block.outer", desc = "Next block start" },
             ["]f"] = { query = "@function.outer", desc = "Next function start" },
             ["]c"] = { query = "@class.outer", desc = "Next class start" },
             ["]a"] = { query = "@parameter.inner", desc = "Next argument start" },
           },
           goto_next_end = {
+            ["]["] = { query = "@block.outer", desc = "Next block end" },
             ["]F"] = { query = "@function.outer", desc = "Next function end" },
             ["]C"] = { query = "@class.outer", desc = "Next class end" },
             ["]A"] = { query = "@parameter.inner", desc = "Next argument end" },
           },
           goto_previous_start = {
+            ["[["] = { query = "@block.outer", desc = "Previous block start" },
             ["[f"] = { query = "@function.outer", desc = "Previous function start" },
             ["[c"] = { query = "@class.outer", desc = "Previous class start" },
             ["[a"] = { query = "@parameter.inner", desc = "Previous argument start" },
           },
           goto_previous_end = {
+            ["[]"] = { query = "@block.outer", desc = "Previous block start" },
             ["[F"] = { query = "@function.outer", desc = "Previous function end" },
             ["[C"] = { query = "@class.outer", desc = "Previous class end" },
             ["[A"] = { query = "@parameter.inner", desc = "Previous argument end" },
