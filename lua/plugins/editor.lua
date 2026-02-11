@@ -152,6 +152,18 @@ return {
           return vim.v.shell_error == 0
         end,
       },
+      use_default_keymaps = false,
+      keymaps = {
+        ["?"] = { "actions.show_help", mode = "n" },
+        ["<CR>"] = "actions.select",
+        ["<BS>"] = { "actions.parent", mode = "n" },
+        ["_"] = { "actions.open_cwd", mode = "n" },
+        ["<space><space>"] = { "actions.preview", mode = "n" },
+        ["<C-r>"] = "actions.refresh",
+        ["`"] = { "actions.cd", mode = "n" },
+        ["gs"] = { "actions.change_sort", mode = "n" },
+        ["gx"] = "actions.open_external",
+      },
       float = {
         padding = 2,
         max_width = 0.75,
@@ -203,25 +215,17 @@ return {
           }, ","),
         },
       },
+      keymaps_help = {
+        border = "rounded",
+      },
     },
     config = function(_, opts)
       local oil = require("oil")
-
       oil.setup(opts)
 
-      vim.api.nvim_create_autocmd("User", {
-        group = Core.create_augroup("oil_autopreview"),
-        pattern = "OilEnter",
-        callback = vim.schedule_wrap(function(args)
-          if vim.api.nvim_get_current_buf() == args.data.buf and oil.get_cursor_entry() then
-            oil.open_preview()
-          end
-        end),
-      })
-
-      vim.keymap.set("n", "<leader>o", function()
+      vim.keymap.set("n", "<leader>e", function()
         oil.toggle_float()
-      end, { desc = "Oil" })
+      end, { desc = "Oil File Explorer" })
     end,
   },
   {
@@ -357,6 +361,7 @@ return {
       "MunifTanjim/nui.nvim",
       "nvim-tree/nvim-web-devicons",
     },
+    event = "VeryLazy",
     opts = {
       filesystem = {
         bind_to_cwd = false,
@@ -412,7 +417,7 @@ return {
       require("neo-tree").setup(opts)
 
       vim.keymap.set("n", "-", function()
-        require("neo-tree.command").execute({ toggle = true })
+        require("neo-tree.command").execute({ action = "show", toggle = true, reveal = true })
       end, { desc = "Toggle File Tree" })
     end,
   },

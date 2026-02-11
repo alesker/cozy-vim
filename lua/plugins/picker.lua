@@ -7,7 +7,6 @@ return {
       "nvim-tree/nvim-web-devicons",
       "nvim-telescope/telescope-ui-select.nvim",
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-      "nvim-telescope/telescope-file-browser.nvim",
       "LukasPietzschmann/telescope-tabs",
     },
     config = function()
@@ -54,7 +53,6 @@ return {
 
       telescope.load_extension("fzf")
       telescope.load_extension("ui-select")
-      telescope.load_extension("file_browser")
       telescope.load_extension("noice")
       telescope.load_extension("telescope-tabs")
 
@@ -102,19 +100,6 @@ return {
         local picker = require("util.telescope_keymaps_picker")
         picker.create(opts):find()
       end, { desc = "Keymaps" })
-
-      -- file explorer
-      vim.keymap.set("n", "<leader>e", function()
-        telescope.extensions.file_browser.file_browser({
-          path = vim.fn.expand("%:p:h"),
-          grouped = true,
-          hidden = true,
-          respect_gitignore = true,
-          sorting_strategy = "ascending",
-          layout_config = { prompt_position = "top" },
-          prompt_title = "File Explorer",
-        })
-      end, { desc = "File Explorer", remap = true })
 
       -- pickers
 

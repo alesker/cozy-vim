@@ -10,6 +10,20 @@ return {
         TreesitterContextBottom = { underline = true, italic = true, sp = palette.gray },
         TreesitterContextLineNumberBottom = { underline = true, italic = true, sp = palette.gray },
 
+        OilGitUntracked = { fg = palette.neutral_aqua, bold = true },
+        OilGitAdded = { fg = palette.neutral_aqua, bold = true },
+        OilGitModified = { fg = palette.neutral_yellow, bold = true },
+        OilGitRenamed = { fg = palette.neutral_purple, bold = true },
+        OilGitIgnored = { fg = palette.gray, bold = false },
+
+        NeoTreeGitUntracked = { fg = palette.neutral_aqua, bold = true },
+        NeoTreeGitAdded = { fg = palette.neutral_aqua, bold = true },
+        NeoTreeGitModified = { fg = palette.neutral_yellow, bold = true },
+        NeoTreeGitRenamed = { fg = palette.neutral_purple, bold = true },
+        NeoTreeGitDeleted = { fg = palette.neutral_red, bold = true },
+        NeoTreeGitIgnored = { fg = palette.gray, bold = false },
+        NeoTreeGitConflict = { fg = palette.neutral_orange, bold = true, italic = true },
+
         RenderMarkdownH1 = { fg = palette.neutral_orange },
         RenderMarkdownH2 = { fg = palette.neutral_yellow },
         RenderMarkdownH3 = { fg = palette.neutral_purple },
