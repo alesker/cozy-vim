@@ -60,6 +60,8 @@ return {
           gruvbox_patched.inactive.c.bg = gruvbox_patched.normal.c.bg
           gruvbox_patched.inactive.c.fg = gruvbox_patched.normal.c.fg
 
+          gruvbox_patched.terminal = gruvbox_patched.command
+
           return gruvbox_patched
         end,
       },

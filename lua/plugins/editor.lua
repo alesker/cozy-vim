@@ -41,8 +41,8 @@ return {
         { "<leader>n", group = "notifications" },
         { "<leader>p", group = "picker", icon = { icon = Core.icons.list, color = "green" } },
         { "<leader>s", group = "search" },
-        { "<leader>t", group = "tab" },
         { "<leader>u", group = "ui" },
+        { "<leader><Tab>", group = "tab" },
         { "[", group = "prev" },
         { "]", group = "next" },
         { "g", group = "goto" },
@@ -51,10 +51,11 @@ return {
       icons = {
         mappings = true,
         rules = {
+          { pattern = "terminal", icon = Core.icons.terminal, color = "cyan" },
           { pattern = "throw harpoon", icon = Core.icons.target, color = "orange" },
           { pattern = "oil", icon = Core.icons.oil, color = "orange" },
           { pattern = "lazy", icon = Core.icons.lazy, color = "yellow" },
-          { pattern = "mason", icon = Core.icons.mason, color = "cyan" },
+          { pattern = "mason", icon = Core.icons.mason, color = "yellow" },
         },
       },
     },

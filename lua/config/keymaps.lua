@@ -36,13 +36,13 @@ vim.keymap.set("n", "<leader>bo", function()
 end, { desc = "Delete Other Buffers" })
 
 -- Tabs
-vim.keymap.set("n", "[t", "<cmd>tabprevious<cr>", { desc = "Prev Tab" })
-vim.keymap.set("n", "]t", "<cmd>tabnext<cr>", { desc = "Next Tab" })
-vim.keymap.set("n", "<leader>tn", "<cmd>tabnew<cr>", { desc = "New Tab" })
-vim.keymap.set("n", "<leader>tc", "<cmd>tabclose<cr>", { desc = "Close Tab" })
-vim.keymap.set("n", "<leader>tc", "<cmd>tabclose<cr>", { desc = "Close Tab" })
+vim.keymap.set("n", "[<Tab>", "<cmd>tabprevious<cr>", { desc = "Prev Tab" })
+vim.keymap.set("n", "]<Tab>", "<cmd>tabnext<cr>", { desc = "Next Tab" })
+vim.keymap.set("n", "<leader><Tab>n", "<cmd>tabnew<cr>", { desc = "New Tab" })
+vim.keymap.set("n", "<leader><Tab>c", "<cmd>tabclose<cr>", { desc = "Close Tab" })
+vim.keymap.set("n", "<leader><Tab>c", "<cmd>tabclose<cr>", { desc = "Close Tab" })
 for i = 1, 4 do
-  vim.keymap.set("n", "<leader>t" .. i, i .. "gt", { desc = "Switch to Tab " .. i })
+  vim.keymap.set("n", "<leader><Tab>" .. i, i .. "gt", { desc = "Switch to Tab " .. i })
 end
 
 -- Add undo break-points

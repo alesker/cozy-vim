@@ -17,6 +17,7 @@ Core.icons = {
   list = " ",
   settings = " ",
   prompt = "",
+  terminal = " ",
   git = {
     branch = "",
     diff = {
