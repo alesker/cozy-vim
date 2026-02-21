@@ -11,7 +11,7 @@ return {
     if neo == 0 then
       header = {
         type = "terminal",
-        command = "neo --speed=5 -a -d 0.5 -D -m NEOVIM",
+        command = "neo --defaultbg --async --speed=5 --density=0.5 --message=NEOVIM",
         width = 42,
         height = 12,
         opts = {

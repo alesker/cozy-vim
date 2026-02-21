@@ -23,6 +23,33 @@ return {
         vim.lsp.enable(server)
       end
 
+      local select = vim.ui.select
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.ui.select = function(items, opts, on_choice)
+        local function action_source(action)
+          local client = vim.lsp.get_client_by_id(action.ctx.client_id)
+          return client and client.name or ""
+        end
+        if opts.kind == "codeaction" then
+          for i, action in ipairs(items) do
+            action._idx = i
+          end
+          table.sort(items, function(a, b)
+            local a_source = action_source(a)
+            local b_source = action_source(b)
+            if a_source == b_source then
+              return a._idx < b._idx
+            elseif a_source == "codebook" then
+              return false
+            elseif b_source == "codebook" then
+              return true
+            end
+            return a._idx < b._idx
+          end)
+        end
+        return select(items, opts, on_choice)
+      end
+
       vim.keymap.del({ "n", "v" }, "gra")
       vim.keymap.del("n", "gri")
       vim.keymap.del("n", "grn")
