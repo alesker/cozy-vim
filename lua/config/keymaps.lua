@@ -4,11 +4,16 @@ vim.keymap.set({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Do
 vim.keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
 vim.keymap.set({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
 
+-- Line start/end shortcuts
+vim.keymap.set({ "n", "x" }, "_", "^", { desc = "^" })
+vim.keymap.set({ "n", "x" }, "+", "$", { desc = "$" })
+
 -- Move to window using the <ctrl> hjkl keys
 vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
 vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
 vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
 vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
+vim.keymap.set("n", "-", "<C-w>w", { desc = "Go to Next Window", remap = true })
 
 -- Move Lines
 vim.keymap.set("n", "<A-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
@@ -120,24 +125,8 @@ Snacks.toggle({
     toggle_key("<C-w><Left>")
     toggle_key("<C-w><Right>")
 
-    toggle_key("<Del>")
-    toggle_key("<BS>")
-
     toggle_key("<LeftMouse>")
     toggle_key("<RightMouse>")
   end,
   name = "Hard Mode",
 }):map("<leader>uH")
-
-vim.api.nvim_create_autocmd("FileType", {
-  group = Core.create_augroup("drop_hard_mode_in_telescope"),
-  pattern = { "TelescopePrompt", "TelescopeResults", "TelescopePreview" },
-  callback = function(event)
-    local function enable_key(key)
-      vim.keymap.set({ "n", "i", "v" }, key, key, { buffer = event.buf, noremap = true, silent = true })
-    end
-    enable_key("<BS>")
-    enable_key("<Left>")
-    enable_key("<Right>")
-  end,
-})

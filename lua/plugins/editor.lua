@@ -302,17 +302,47 @@ return {
           },
         },
       },
+      keys = {
+        f = {
+          action = function(view)
+            local mode = view.opts.mode
+            local type = view.opts.win.type
+            local trouble = require("trouble")
+
+            trouble.close()
+            trouble.open({
+              mode = mode,
+              focus = true,
+              win = {
+                type = type == "split" and "float" or "split",
+                relative = "editor",
+                size = type == "split" and { width = 0.75, height = 0.75 } or 0.25,
+                border = "rounded",
+              },
+            })
+          end,
+          desc = "Toggle Float",
+        },
+      },
     },
 
     keys = {
+      { "gd", "<cmd>Trouble lsp_definitions toggle<cr>", desc = "Goto Definition" },
+      { "gD", "<cmd>Trouble lsp_declarations toggle<cr>", desc = "Goto Declaration" },
+
       { "<leader>cs", "<cmd>Trouble lsp toggle<cr>", desc = "Symbols" },
       { "<leader>co", "<cmd>Trouble symbols toggle<cr>", desc = "Outline" },
 
       { "<leader>id", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics" },
-      { "<leader>ix", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Current Buffer Diagnostics" },
-      { "<leader>iq", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix List" },
-      { "<leader>il", "<cmd>Trouble loclist toggle<cr>", desc = "Location List" },
+      { "<leader>ix", "<cmd>Trouble diagnostics toggle filter={buf=0}<cr>", desc = "Current Buffer Diagnostics" },
+      { "<leader>iq", "<cmd>Trouble quickfix toggle<cr>", desc = "Quickfix List" },
+      {
+        "<leader>it",
+        "<cmd>Trouble todo toggle filter={tag={TODO,FIX,FIXME}}<cr>",
+        desc = "TODO/FIX/FIXME",
+      },
     },
+
     config = function(_, opts)
       local trouble = require("trouble")
       trouble.setup(opts)
@@ -346,13 +376,6 @@ return {
       vim.keymap.set("n", "]q", function()
         next(vim.cmd.cnext)
       end, { desc = "Next Quickfix" })
-
-      vim.keymap.set("n", "[l", function()
-        prev(vim.cmd.lprev)
-      end, { desc = "Previous Location" })
-      vim.keymap.set("n", "]l", function()
-        next(vim.cmd.lnext)
-      end, { desc = "Next Location" })
     end,
   },
   {
@@ -417,9 +440,9 @@ return {
 
       require("neo-tree").setup(opts)
 
-      vim.keymap.set("n", "-", function()
+      vim.keymap.set("n", "<leader>cf", function()
         require("neo-tree.command").execute({ action = "show", toggle = true, reveal = true })
-      end, { desc = "Toggle File Tree" })
+      end, { desc = "Reveal File in File Tree" })
     end,
   },
 }

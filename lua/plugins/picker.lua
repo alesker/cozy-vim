@@ -13,14 +13,9 @@ return {
       local telescope = require("telescope")
       local actions = require("telescope.actions")
 
-      local function open_trouble_qf(prompt_bufnr)
+      local function open_trouble_quickfix(prompt_bufnr)
         actions.smart_send_to_qflist(prompt_bufnr)
-        require("trouble").open({ mode = "qflist", focus = true })
-      end
-
-      local function open_trouble_loc(prompt_bufnr)
-        actions.smart_send_to_loclist(prompt_bufnr)
-        require("trouble").open({ mode = "loclist", focus = true })
+        require("trouble").open({ mode = "quickfix", focus = true })
       end
 
       telescope.setup({
@@ -35,12 +30,10 @@ return {
           selection_caret = Core.icons.telescope.selection_caret,
           mappings = {
             i = {
-              ["<C-q>"] = open_trouble_qf,
-              ["<C-l>"] = open_trouble_loc,
+              ["<C-q>"] = open_trouble_quickfix,
             },
             n = {
-              ["<C-q>"] = open_trouble_qf,
-              ["<C-l>"] = open_trouble_loc,
+              ["<C-q>"] = open_trouble_quickfix,
             },
           },
         },

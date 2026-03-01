@@ -96,9 +96,6 @@ return {
 
       vim.keymap.set("n", "<leader>cR", Snacks.rename.rename_file, { desc = "Rename File" })
 
-      vim.keymap.set("n", "gd", "<cmd>Trouble lsp_definitions toggle<cr>", { desc = "Goto Definition" })
-      vim.keymap.set("n", "gD", "<cmd>Trouble lsp_declarations toggle<cr>", { desc = "Goto Declaration" })
-
       --   {vim.keymap.set(
       --     "]]",
       --     function()

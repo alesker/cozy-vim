@@ -101,12 +101,5 @@ return {
     cmd = { "TodoTrouble", "TodoTelescope" },
     event = "VeryLazy",
     opts = {},
-    keys = {
-      {
-        "<leader>it",
-        "<cmd>Trouble todo toggle filter = {tag = {TODO,FIX,FIXME}}<cr>",
-        desc = "TODO/FIX/FIXME",
-      },
-    },
   },
 }
