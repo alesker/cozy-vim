@@ -1,3 +1,42 @@
+local function theme(colors)
+  local b = { bg = colors.lightgray, fg = colors.light }
+  local c = { bg = colors.darkgray, fg = colors.gray }
+  local modes = {
+    normal = {
+      a = { bg = colors.gray, fg = colors.dark, gui = "bold" },
+      b = b,
+      c = c,
+    },
+    insert = {
+      a = { bg = colors.blue, fg = colors.dark, gui = "bold" },
+      b = b,
+      c = c,
+    },
+    visual = {
+      a = { bg = colors.yellow, fg = colors.dark, gui = "bold" },
+      b = b,
+      c = c,
+    },
+    replace = {
+      a = { bg = colors.red, fg = colors.dark, gui = "bold" },
+      b = b,
+      c = c,
+    },
+    command = {
+      a = { bg = colors.green, fg = colors.dark, gui = "bold" },
+      b = b,
+      c = c,
+    },
+    inactive = {
+      a = { bg = colors.darkgray, fg = colors.lightgray, gui = "bold" },
+      b = b,
+      c = c,
+    },
+  }
+  modes.terminal = modes.command
+  return modes
+end
+
 return {
   "nvim-lualine/lualine.nvim",
   dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -45,24 +84,21 @@ return {
           right = Core.icons.statusline.bubble_right,
         },
         theme = function()
-          -- need to do this because of the bug where section_separators disappear if b and c section bg colors are the same
           local background = vim.opt.background:get()
-          local gruvbox_patched = require("lualine.themes.gruvbox_" .. background)
+          local gruvbox = require("gruvbox")
+          local palette = gruvbox.palette
 
-          gruvbox_patched.insert.c.bg = gruvbox_patched.normal.c.bg
-          gruvbox_patched.insert.c.fg = gruvbox_patched.normal.c.fg
-          gruvbox_patched.visual.c.bg = gruvbox_patched.normal.c.bg
-          gruvbox_patched.visual.c.fg = gruvbox_patched.normal.c.fg
-          gruvbox_patched.replace.c.bg = gruvbox_patched.normal.c.bg
-          gruvbox_patched.replace.c.fg = gruvbox_patched.normal.c.fg
-          gruvbox_patched.command.c.bg = gruvbox_patched.normal.c.bg
-          gruvbox_patched.command.c.fg = gruvbox_patched.normal.c.fg
-          gruvbox_patched.inactive.c.bg = gruvbox_patched.normal.c.bg
-          gruvbox_patched.inactive.c.fg = gruvbox_patched.normal.c.fg
-
-          gruvbox_patched.terminal = gruvbox_patched.command
-
-          return gruvbox_patched
+          return theme({
+            light = background == "dark" and palette.light0 or palette.dark0,
+            dark = background == "dark" and palette.dark0 or palette.light0,
+            gray = palette.gray,
+            lightgray = background == "dark" and palette.dark3 or palette.light3,
+            darkgray = background == "dark" and palette.dark1 or palette.light1,
+            blue = palette.neutral_blue,
+            yellow = palette.neutral_orange,
+            red = palette.neutral_red,
+            green = palette.neutral_aqua,
+          })
         end,
       },
 

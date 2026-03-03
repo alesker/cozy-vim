@@ -8,6 +8,10 @@ vim.keymap.set({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up",
 vim.keymap.set({ "n", "x" }, "_", "^", { desc = "^" })
 vim.keymap.set({ "n", "x" }, "+", "$", { desc = "$" })
 
+-- Jump back/forward shortcuts
+vim.keymap.set("n", "<C-->", "<C-o>")
+vim.keymap.set("n", "<C-=>", "<C-i>")
+
 -- Move to window using the <ctrl> hjkl keys
 vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
 vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
