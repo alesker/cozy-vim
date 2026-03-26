@@ -75,6 +75,9 @@ return {
       return string.format("[%d]", lines)
     end
 
+    local gruvbox = require("gruvbox")
+    local palette = gruvbox.palette
+
     require("lualine").setup({
       options = {
         disabled_filetypes = { statusline = { "alpha" } },
@@ -85,8 +88,6 @@ return {
         },
         theme = function()
           local background = vim.opt.background:get()
-          local gruvbox = require("gruvbox")
-          local palette = gruvbox.palette
 
           return theme({
             light = background == "dark" and palette.light0 or palette.dark0,
@@ -116,7 +117,7 @@ return {
 
           {
             registry_recording,
-            color = { fg = "Red", gui = "italic,bold" },
+            color = { fg = palette.neutral_red, gui = "italic,bold" },
             cond = should_show_registry_recording,
           },
         },
