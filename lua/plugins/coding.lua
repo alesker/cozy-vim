@@ -7,7 +7,7 @@ return {
         preset = "none",
 
         ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
-        ["<C-e>"] = { "hide", "fallback" },
+        ["<Esc>"] = { "hide", "fallback" },
         ["<CR>"] = { "select_and_accept", "fallback" },
 
         ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
@@ -29,6 +29,9 @@ return {
       },
       appearance = {
         nerd_font_variant = "mono",
+        kind_icons = {
+          openai = Core.icons.ai,
+        },
       },
       cmdline = {
         keymap = {
@@ -68,6 +71,9 @@ return {
         ghost_text = {
           enabled = true,
         },
+        trigger = {
+          prefetch_on_insert = false,
+        },
       },
       signature = {
         enabled = true,
@@ -79,6 +85,7 @@ return {
           "path",
           "snippets",
           "buffer",
+          "minuet",
         },
         providers = {
           minuet = {

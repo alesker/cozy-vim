@@ -49,6 +49,7 @@ Core.icons = {
   lazy = "󰒲 ",
   mason = " ",
   oil = " ",
+  ai = "󰹻 ",
 }
 
 Core.icons.dashboard = {
