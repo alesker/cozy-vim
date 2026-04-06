@@ -14,6 +14,18 @@ return {
 
       local lint = require("lint")
 
+      for name, linter in pairs(opts.linters) do
+        local default_linter = lint.linters[name]
+        if type(linter) == "table" and type(default_linter) == "table" then
+          lint.linters[name] = vim.tbl_deep_extend("force", default_linter, linter)
+          if type(linter.prepend_args) == "table" then
+            lint.linters[name].args = vim.list_extend(default_linter.args or {}, linter.prepend_args)
+          end
+        else
+          lint.linters[name] = linter
+        end
+      end
+
       lint.linters_by_ft = opts.linters_by_ft
 
       vim.api.nvim_create_autocmd(opts.events, {

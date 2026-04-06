@@ -24,6 +24,11 @@ return {
         yaml = { "yamlfmt" },
         toml = { "tombi" },
       },
+      formatters = {
+        yamlfmt = {
+          prepend_args = { "-formatter", "retain_line_breaks_single=true" },
+        },
+      },
     },
   },
   {
@@ -35,7 +40,14 @@ return {
         yaml = { "yamllint" },
         toml = { "tombi" },
       },
-      linters = {},
+      linters = {
+        yamllint = {
+          prepend_args = {
+            "--config-data",
+            "{extends: relaxed, rules: {line-length: {max: 120}}}",
+          },
+        },
+      },
     },
   },
 }

@@ -22,6 +22,7 @@ return {
     opts = {
       ensure_installed = {},
       formatters_by_ft = { markdown = {} },
+      formatters = {},
     },
   },
   {

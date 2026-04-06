@@ -24,6 +24,7 @@ return {
         bash = { "shfmt" },
         zsh = { "shfmt" },
       },
+      formatters = {},
     },
   },
   {

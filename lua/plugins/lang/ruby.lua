@@ -22,6 +22,7 @@ return {
     opts = {
       ensure_installed = { "rubocop" },
       formatters_by_ft = { ruby = { "rubocop" } },
+      formatters = {},
     },
   },
   {

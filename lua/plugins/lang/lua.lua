@@ -22,6 +22,7 @@ return {
     opts = {
       ensure_installed = { "stylua" },
       formatters_by_ft = { lua = { "stylua" } },
+      formatters = {},
     },
   },
   {
