@@ -30,9 +30,12 @@ end)
 
 vim.o.jumpoptions = "view"
 
-vim.o.ruler = false
+vim.o.textwidth = 120
+vim.o.colorcolumn = "+1"
 
 vim.o.signcolumn = "yes"
+
+vim.o.ruler = false
 
 vim.o.spelllang = "en"
 
