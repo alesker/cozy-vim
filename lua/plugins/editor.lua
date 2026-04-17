@@ -27,6 +27,19 @@ return {
     event = "VimEnter",
     opts = {
       preset = "helix",
+      triggers = {
+        { "<auto>", mode = "nxso" },
+        { "m", mode = "n" },
+      },
+      replace = {
+        key = {
+          function(key)
+            return require("which-key.view").format(key)
+          end,
+          { "<Lower>", "[a-z]" },
+          { "<Upper>", "[A-Z]" },
+        },
+      },
       spec = {
         mode = { "n", "x" },
         { "<leader>b", group = "buffer" },
@@ -42,6 +55,7 @@ return {
         { "<leader>s", group = "search" },
         { "<leader>u", group = "ui" },
         { "<leader><Tab>", group = "tab" },
+        { "m", group = "marks", mode = "n" },
         { "[", group = "prev" },
         { "]", group = "next" },
         { "g", group = "goto" },
@@ -58,6 +72,9 @@ return {
         },
       },
     },
+    config = function(_, opts)
+      require("which-key").setup(opts)
+    end,
   },
   {
     "folke/snacks.nvim",
@@ -253,6 +270,57 @@ return {
         end, "Blame Buffer")
       end,
     },
+  },
+  {
+    "chentoast/marks.nvim",
+    event = "VeryLazy",
+    opts = {
+      default_mappings = false,
+      cyclic = true,
+    },
+    config = function(_, opts)
+      local marks = require("marks")
+      marks.setup(opts)
+
+      vim.keymap.set("n", "]m", function()
+        marks.next()
+      end, { desc = "Next mark", silent = true })
+      vim.keymap.set("n", "[m", function()
+        marks.prev()
+      end, { desc = "Prev mark", silent = true })
+
+      vim.keymap.set("n", "m ", "<leader>sm", { desc = "Show marks picker", remap = true })
+
+      local handler = require("util.global_line_marks_handler")
+
+      vim.keymap.set("n", "m,", function()
+        handler.toggle_next_mark()
+      end, { desc = "Toggle next mark", silent = true })
+      vim.keymap.set("n", "m/", function()
+        handler.delete_marks()
+      end, { desc = "Delete all marks", silent = true })
+
+      local spec = {
+        { "m_", desc = "Toggle [A-Z] mark", mode = "n" },
+      }
+
+      for byte = string.byte("A"), string.byte("Z") do
+        local mark = string.char(byte)
+        vim.keymap.set("n", "m" .. mark:lower(), function()
+          handler.toggle_mark(mark)
+        end, { desc = "Toggle mark " .. mark, silent = true })
+        vim.keymap.set("n", "m" .. mark, function()
+          handler.toggle_mark(mark)
+        end, { desc = "Toggle mark " .. mark, silent = true })
+
+        table.insert(spec, { "m" .. mark:lower(), hidden = true, mode = "n" })
+        table.insert(spec, { "m" .. mark, hidden = true, mode = "n" })
+      end
+
+      require("which-key").add(spec)
+
+      vim.api.nvim_set_hl(0, "MarkSignHL", { link = "GruvboxPurpleBold" })
+    end,
   },
   {
     "nvim-treesitter/nvim-treesitter-context",

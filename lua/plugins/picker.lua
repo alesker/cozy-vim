@@ -81,6 +81,7 @@ return {
       vim.keymap.set("n", "<leader>sh", builtin.command_history, { desc = "Command History" })
       vim.keymap.set("n", "<leader>s?", builtin.help_tags, { desc = "Help Pages" })
       vim.keymap.set("n", "<leader>sr", builtin.registers, { desc = "Registers" })
+      vim.keymap.set("n", "<leader>sm", builtin.marks, { desc = "Marks" })
       vim.keymap.set("n", "<leader>sk", function()
         local opts = {
           modes = { "n", "v", "x", "o", "i", "c", "t" },
