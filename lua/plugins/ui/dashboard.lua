@@ -57,10 +57,9 @@ return {
       type = "group",
       val = {
         dashboard.button("n", icons.new_file .. " " .. "New file", ":enew <BAR> startinsert <CR>"),
-        dashboard.button("f", icons.find_file .. " " .. "Find file", ":Telescope find_files <CR>"),
-        dashboard.button("r", icons.recent_files .. " " .. "Recent files", ":Telescope oldfiles <CR>"),
-        dashboard.button("g", icons.find_text .. " " .. "Find text", ":Telescope live_grep <CR>"),
-        dashboard.button("c", icons.config .. " " .. "Config", ":e $MYVIMRC <CR>"),
+        dashboard.button(".", icons.find_file .. " " .. "Find file", ":Telescope find_files <CR>"),
+        dashboard.button(",", icons.recent_files .. " " .. "Recent files", ":Telescope oldfiles <CR>"),
+        dashboard.button("/", icons.find_text .. " " .. "Find text", ":Telescope live_grep <CR>"),
         dashboard.button("s", icons.restore_session .. " " .. "Restore Session", ":PersistenceLoad <CR>"),
         dashboard.button("l", icons.lazy .. " " .. "Lazy", ":Lazy <CR>"),
         dashboard.button("m", icons.mason .. " " .. "Mason", ":Mason <CR>"),

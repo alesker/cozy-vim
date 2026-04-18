@@ -56,10 +56,13 @@ return {
       -- shortcuts
 
       vim.keymap.set("n", "<leader>.", "<leader>ff", { desc = "Find Files", remap = true })
-      vim.keymap.set("n", "<leader>,", "<leader>fb", { desc = "Find Buffers", remap = true })
-      vim.keymap.set("n", "<leader>*", "<leader>fw", { desc = "Find Word", remap = true })
+      vim.keymap.set("n", "<leader>,", "<leader>fr", { desc = "Find Files (Recent)", remap = true })
       vim.keymap.set("n", "<leader>/", "<leader>sf", { desc = "Search Files", remap = true })
-      vim.keymap.set("n", "<leader>?", "<leader>sb", { desc = "Search Buffers", remap = true })
+
+      vim.keymap.set("n", "<leader>;", "<leader>fb", { desc = "Find Buffers", remap = true })
+      vim.keymap.set("n", "<leader>'", "<leader>sb", { desc = "Search Buffers", remap = true })
+
+      vim.keymap.set("n", "<leader>?", "<leader>fw", { desc = "Find Word", remap = true })
 
       -- find
 
