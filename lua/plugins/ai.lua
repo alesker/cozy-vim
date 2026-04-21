@@ -50,4 +50,41 @@ return {
       })
     end,
   },
+  {
+    "nickjvandyke/opencode.nvim",
+    version = "*",
+    dependencies = {
+      {
+        "folke/snacks.nvim",
+        optional = true,
+        opts = {
+          input = {},
+          picker = {
+            actions = {
+              opencode_send = function(...)
+                return require("opencode").snacks_picker_send(...)
+              end,
+            },
+          },
+        },
+      },
+    },
+    config = function()
+      vim.g.opencode_opts = {}
+      vim.o.autoread = true
+
+      vim.keymap.set({ "n", "x" }, "<leader>oa", function()
+        require("opencode").ask("@this: ", { submit = true })
+      end, { desc = "OpenCode Ask" })
+      vim.keymap.set({ "n", "x" }, "<leader>oo", function()
+        require("opencode").select()
+      end, { desc = "OpenCode Select" })
+      vim.keymap.set("n", "<leader>os", function()
+        require("opencode").select_session()
+      end, { desc = "OpenCode Sessions" })
+      vim.keymap.set({ "n", "t" }, "<leader>ot", function()
+        require("opencode").toggle()
+      end, { desc = "OpenCode Toggle" })
+    end,
+  },
 }

@@ -51,6 +51,7 @@ return {
         { "<leader>h", group = "harpoon", icon = { icon = Core.icons.harpoon, color = "orange" } },
         { "<leader>i", group = "insights", icon = { icon = Core.icons.insights, color = "purple" } },
         { "<leader>n", group = "notifications" },
+        { "<leader>o", group = "opencode", icon = { icon = Core.icons.ai, color = "cyan" } },
         { "<leader>p", group = "picker", icon = { icon = Core.icons.list, color = "green" } },
         { "<leader>s", group = "search" },
         { "<leader>u", group = "ui" },
