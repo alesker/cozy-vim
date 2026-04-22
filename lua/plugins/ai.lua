@@ -70,8 +70,57 @@ return {
       },
     },
     config = function()
-      vim.g.opencode_opts = {}
-      vim.o.autoread = true
+      local pair_programmer = {
+        agent = "pair-programmer",
+        model = "openai/gpt-5.5",
+      }
+
+      local function get_free_port()
+        local tcp = assert(vim.uv.new_tcp())
+        assert(tcp:bind("127.0.0.1", 0))
+        local port = assert(tcp:getsockname()).port
+        tcp:close()
+        return port
+      end
+
+      local opencode_port = get_free_port()
+
+      local function opencode_command()
+        local config = vim.fn.json_encode({
+          default_agent = pair_programmer.agent,
+          agent = {
+            [pair_programmer.agent] = {
+              hidden = false,
+              model = pair_programmer.model,
+            },
+          },
+        })
+
+        return table.concat({
+          "OPENCODE_CONFIG_CONTENT=" .. vim.fn.shellescape(config),
+          "opencode",
+          "--port",
+          tostring(opencode_port),
+        }, " ")
+      end
+
+      vim.g.opencode_opts = {
+        server = {
+          port = opencode_port,
+          start = function()
+            require("opencode.terminal").open(opencode_command())
+          end,
+          stop = function()
+            require("opencode.terminal").close()
+          end,
+          toggle = function()
+            require("opencode.terminal").toggle(opencode_command())
+          end,
+        },
+      }
+
+      local opencode_work = require("util.opencode_work.opencode_work")
+      opencode_work.setup()
 
       vim.keymap.set({ "n", "x" }, "<leader>oa", function()
         require("opencode").ask("@this: ", { submit = true })
@@ -85,6 +134,12 @@ return {
       vim.keymap.set({ "n", "t" }, "<leader>ot", function()
         require("opencode").toggle()
       end, { desc = "OpenCode Toggle" })
+      vim.keymap.set({ "n", "x" }, "<leader>ow", function()
+        opencode_work.schedule()
+      end, { desc = "OpenCode Work" })
+      vim.keymap.set("n", "<leader>ox", function()
+        opencode_work.stop_current()
+      end, { desc = "OpenCode Work Stop" })
     end,
   },
 }
