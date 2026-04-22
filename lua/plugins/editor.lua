@@ -247,32 +247,6 @@ return {
     end,
   },
   {
-    "lewis6991/gitsigns.nvim",
-    opts = {
-      signs = {
-        add = { text = Core.icons.git.diff.add },
-        change = { text = Core.icons.git.diff.change },
-        delete = { text = Core.icons.git.diff.delete },
-        topdelete = { text = Core.icons.git.diff.topdelete },
-        changedelete = { text = Core.icons.git.diff.changedelete },
-      },
-      on_attach = function(buffer)
-        local gs = package.loaded.gitsigns
-
-        local function map(mode, l, r, desc)
-          vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc, silent = true })
-        end
-
-        map("n", "<leader>gb", function()
-          gs.blame_line({ full = true })
-        end, "Blame Line")
-        map("n", "<leader>gB", function()
-          gs.blame()
-        end, "Blame Buffer")
-      end,
-    },
-  },
-  {
     "chentoast/marks.nvim",
     event = "VeryLazy",
     opts = {
