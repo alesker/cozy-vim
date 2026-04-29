@@ -21,10 +21,13 @@ return {
       telescope.setup({
         pickers = {
           find_files = { hidden = true },
+          oldfiles = { only_cwd = true },
+          buffers = { sort_mru = true, sort_lastused = true },
         },
         defaults = {
           file_ignore_patterns = {
             "%.DS_Store$",
+            "^%.git/",
           },
           prompt_prefix = Core.icons.telescope.prompt_prefix,
           selection_caret = Core.icons.telescope.selection_caret,
@@ -68,15 +71,15 @@ return {
 
       vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Files" })
       vim.keymap.set("n", "<leader>fr", builtin.oldfiles, { desc = "Files (Recent)" })
-      vim.keymap.set("n", "<leader>fb", function()
-        builtin.buffers({ sort_mru = true, sort_lastused = true })
-      end, { desc = "Buffers" })
+      vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Buffers" })
       vim.keymap.set({ "n", "x" }, "<leader>fw", builtin.grep_string, { desc = "Word/Selection" })
       vim.keymap.set("n", "<leader>ft", require("telescope-tabs").list_tabs, { desc = "Tabs" })
 
       -- search
 
-      vim.keymap.set("n", "<leader>sf", builtin.live_grep, { desc = "Files" })
+      vim.keymap.set("n", "<leader>sf", function()
+        builtin.live_grep()
+      end, { desc = "Files" })
       vim.keymap.set("n", "<leader>sb", function()
         builtin.live_grep({ grep_open_files = true })
       end, { desc = "Buffers" })
