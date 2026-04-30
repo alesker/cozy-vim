@@ -3,7 +3,6 @@ return {
     "NeogitOrg/neogit",
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "esmuellert/codediff.nvim",
       "nvim-telescope/telescope.nvim",
     },
     opts = {
@@ -26,10 +25,8 @@ return {
         style = "minimal",
         border = "rounded",
       },
-      diff_viewer = "codediff",
       integrations = {
         telescope = true,
-        codediff = true,
       },
       signs = {
         hunk = { "", "" },
@@ -40,8 +37,8 @@ return {
         status = {
           ["<tab>"] = "NextSection",
           ["<s-tab>"] = "PreviousSection",
-          ["za"] = false,
           ["<space>"] = "Toggle",
+          ["za"] = false,
         },
       },
     },
@@ -51,27 +48,30 @@ return {
 
       neogit.setup(opts)
 
+      vim.api.nvim_set_hl(0, "NeogitDiffAddHighlight", { link = "NeogitDiffAdd" })
+      vim.api.nvim_set_hl(0, "NeogitDiffDeleteHighlight", { link = "NeogitDiffDelete" })
+      local function focus_pending_file()
+        local status = require("neogit.buffers.status").instance(vim.fn.getcwd())
+        local item_index = vim.tbl_get(status or {}, "buffer", "ui", "item_index") or {}
+
+        for _, section in ipairs(item_index) do
+          for _, item in ipairs(section.items or {}) do
+            if item.absolute_path == pending_file then
+              status.buffer:move_cursor(item.first)
+              return
+            end
+          end
+        end
+      end
+
       vim.api.nvim_create_autocmd("User", {
         pattern = "NeogitStatusRefreshed",
         callback = function()
           if not pending_file then
             return
           end
-
           vim.schedule(function()
-            local status = require("neogit.buffers.status").instance(vim.fn.getcwd())
-            local item_index = status and status.buffer and status.buffer.ui and status.buffer.ui.item_index or {}
-
-            for _, section in ipairs(item_index) do
-              for _, item in ipairs(section.items or {}) do
-                if item.absolute_path == pending_file then
-                  status.buffer:move_cursor(item.first)
-                  pending_file = nil
-                  return
-                end
-              end
-            end
-
+            focus_pending_file()
             pending_file = nil
           end)
         end,
@@ -137,79 +137,6 @@ return {
           { buffer = buffer, desc = "Select hunk", silent = true }
         )
       end,
-    },
-  },
-  {
-    "esmuellert/codediff.nvim",
-    opts = {
-      keymaps = {
-        view = {
-          quit = "q",
-          next_hunk = "]]",
-          prev_hunk = "[[",
-          stage_hunk = "gs",
-          unstage_hunk = "gu",
-          discard_hunk = "gr",
-          toggle_layout = "l",
-          toggle_explorer = ".",
-          show_help = "?",
-          next_file = "}}",
-          prev_file = "{{",
-          hunk_textobject = "ih",
-          align_move = false,
-          open_in_prev_tab = false,
-          diff_get = false,
-          diff_put = false,
-          focus_explorer = false,
-          toggle_stage = false,
-        },
-        explorer = {
-          select = "<CR>",
-          toggle_view_mode = "t",
-          hover = false,
-          refresh = false,
-          stage_all = false,
-          unstage_all = false,
-          restore = false,
-          toggle_changes = false,
-          toggle_staged = false,
-          fold_open = false,
-          fold_open_recursive = false,
-          fold_close = false,
-          fold_close_recursive = false,
-          fold_toggle = false,
-          fold_toggle_recursive = false,
-          fold_open_all = false,
-          fold_close_all = false,
-        },
-        history = {
-          select = false,
-          toggle_view_mode = false,
-          refresh = false,
-          fold_open = false,
-          fold_open_recursive = false,
-          fold_close = false,
-          fold_close_recursive = false,
-          fold_toggle = false,
-          fold_toggle_recursive = false,
-          fold_open_all = false,
-          fold_close_all = false,
-        },
-        conflict = {
-          accept_incoming = false,
-          accept_current = false,
-          accept_both = false,
-          discard = false,
-          accept_all_incoming = false,
-          accept_all_current = false,
-          accept_all_both = false,
-          discard_all = false,
-          next_conflict = false,
-          prev_conflict = false,
-          diffget_incoming = false,
-          diffget_current = false,
-        },
-      },
     },
   },
 }
