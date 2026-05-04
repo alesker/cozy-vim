@@ -27,6 +27,12 @@ vim.keymap.set("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
 vim.keymap.set("v", "<A-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down" })
 vim.keymap.set("v", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up" })
 
+-- Last yank pasting
+vim.keymap.set("n", "gp", '"0p', { desc = "Paste last yank" })
+vim.keymap.set("n", "gP", '"0P', { desc = "Paste last yank before cursor" })
+vim.keymap.set("x", "gp", '"_d"0P', { desc = "Replace selection with last yank" })
+vim.keymap.set("x", "gP", '"_d"0P', { desc = "Replace selection with last yank" })
+
 -- Better indenting
 vim.keymap.set("x", "<", "<gv")
 vim.keymap.set("x", ">", ">gv")
