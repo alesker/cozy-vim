@@ -73,6 +73,8 @@ return {
       local pair_programmer = {
         agent = "pair-programmer",
         model = "openai/gpt-5.5",
+        reasoning = "low",
+        verbosity = "low",
       }
 
       local function get_free_port()
@@ -92,6 +94,8 @@ return {
             [pair_programmer.agent] = {
               hidden = false,
               model = pair_programmer.model,
+              reasoningEffort = pair_programmer.reasoning,
+              textVerbosity = pair_programmer.verbosity,
             },
           },
         })
