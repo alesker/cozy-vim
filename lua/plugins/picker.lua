@@ -7,6 +7,7 @@ return {
       "nvim-tree/nvim-web-devicons",
       "nvim-telescope/telescope-ui-select.nvim",
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      "neovim/nvim-lspconfig",
       "LukasPietzschmann/telescope-tabs",
     },
     config = function()
@@ -100,6 +101,13 @@ return {
         local picker = require("util.telescope_keymaps_picker")
         picker.create(opts):find()
       end, { desc = "Keymaps" })
+
+      -- lsp
+
+      vim.keymap.set("n", "gd", builtin.lsp_definitions, { desc = "Goto Definitions" })
+      vim.keymap.set("n", "gr", builtin.lsp_references, { desc = "Goto References" })
+      vim.keymap.set("n", "gi", builtin.lsp_implementations, { desc = "Goto Implementations" })
+      vim.keymap.set("n", "gy", builtin.lsp_type_definitions, { desc = "Goto Type Definitions" })
 
       -- pickers
 

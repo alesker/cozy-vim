@@ -12,6 +12,9 @@ vim.keymap.set({ "n", "x" }, "+", "$", { desc = "$" })
 vim.keymap.set("n", "<C-->", "<C-o>")
 vim.keymap.set("n", "<C-=>", "<C-i>")
 
+-- Go to last insert
+vim.keymap.set("n", "<BS>", "gi", { desc = "Go to last insert" })
+
 -- Move to window using the <ctrl> hjkl keys
 vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
 vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })

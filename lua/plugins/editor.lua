@@ -369,9 +369,6 @@ return {
     },
 
     keys = {
-      { "gd", "<cmd>Trouble lsp_definitions toggle<cr>", desc = "Goto Definition" },
-      { "gD", "<cmd>Trouble lsp_declarations toggle<cr>", desc = "Goto Declaration" },
-
       { "<leader>cs", "<cmd>Trouble lsp toggle<cr>", desc = "Symbols" },
       { "<leader>co", "<cmd>Trouble symbols toggle<cr>", desc = "Outline" },
 
