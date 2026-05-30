@@ -1,0 +1,17 @@
+{
+  "constructor": {
+    "prefix": "constructor",
+    "body": "func New${1:Type}() *${1:Type} {\n\treturn &${1:Type}{}\n}",
+    "description": "Constructor returning pointer to type"
+  },
+  "enum": {
+    "prefix": "enum",
+    "body": "type ${1:Enum} ${2:string}\n\nconst (\n\t${1:Enum}${3:ValueName} ${1:Enum} = ${4:value}\n)",
+    "description": "Enum type and const block"
+  },
+  "sentinel error": {
+    "prefix": "sentinel",
+    "body": "var Err${1:Name} = errors.New(\"${2:message}\")",
+    "description": "Sentinel error variable"
+  }
+}

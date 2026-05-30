@@ -13,7 +13,14 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        gopls = {},
+        gopls = {
+          settings = {
+            gopls = {
+              completeFunctionCalls = true,
+              usePlaceholders = true,
+            },
+          },
+        },
       },
     },
   },
