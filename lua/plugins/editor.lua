@@ -441,7 +441,6 @@ return {
         },
       },
       window = {
-        width = 0.2,
         mappings = {
           ["l"] = "open",
           ["h"] = "close_node",
@@ -481,7 +480,10 @@ return {
       require("neo-tree").setup(opts)
 
       vim.keymap.set("n", "<leader>cf", function()
-        require("neo-tree.command").execute({ action = "show", toggle = true, reveal = true })
+        require("neo-tree.command").execute(
+          { action = "show", toggle = true, reveal = true },
+          { window = { width = math.floor(vim.o.columns * 0.25) } }
+        )
       end, { desc = "Reveal File in File Tree" })
     end,
   },
