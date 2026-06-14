@@ -37,6 +37,57 @@ local function theme(colors)
   return modes
 end
 
+local function custom_status(specs)
+  local function spec_key()
+    local key
+
+    if vim.bo.filetype == "trouble" or vim.bo.filetype == "Trouble" then
+      local trouble_views = require("trouble.view")
+      local views = trouble_views.get()
+      local mode = views[1].mode
+
+      return "trouble" .. (mode and (":" .. mode) or "")
+    else
+      key = vim.bo.filetype
+    end
+
+    return key
+  end
+
+  local title = function()
+    local spec = specs[spec_key()]
+    return spec.title or spec or vim.bo.filetype
+  end
+  local details = function()
+    local spec = specs[spec_key()]
+    return spec.details()
+  end
+
+  return {
+    filetypes = vim.tbl_keys(specs),
+    section_separators = {
+      left = Core.icons.statusline.bubble_left,
+      right = Core.icons.statusline.bubble_right,
+    },
+    sections = {
+      lualine_a = {
+        {
+          title,
+          separator = {
+            left = Core.icons.statusline.bubble_right,
+            right = Core.icons.statusline.bubble_left,
+          },
+        },
+      },
+      lualine_b = { details },
+      lualine_c = {},
+      lualine_x = {},
+      lualine_y = {},
+      lualine_z = {},
+    },
+  }
+end
+
 return {
   "nvim-lualine/lualine.nvim",
   dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -73,6 +124,44 @@ return {
     local function total_lines()
       local lines = vim.fn.line("$")
       return string.format("[%d]", lines)
+    end
+
+    local function lazy_count()
+      local stats = require("lazy").stats()
+      return string.format("Loaded: %d/%d", stats.loaded, stats.count)
+    end
+
+    local function mason_count()
+      local ok, registry = pcall(require, "mason-registry")
+      if not ok then
+        return ""
+      end
+
+      return string.format("Installed: %d/%d", #registry.get_installed_packages(), #registry.get_all_packages())
+    end
+
+    local function trouble_count()
+      local view = require("trouble.view").get()[1].view
+      local current = view:at()
+      local current_id = current and current.item and current.item.id
+      local index = 0
+      local total = 0
+
+      for _, section in ipairs(view.sections) do
+        for _, item in ipairs(section.items) do
+          total = total + 1
+
+          if item.id == current_id then
+            index = total
+          end
+        end
+      end
+
+      if index == 0 then
+        return ""
+      end
+
+      return string.format("%d/%d", index, total)
     end
 
     local gruvbox = require("gruvbox")
@@ -142,10 +231,24 @@ return {
       },
 
       extensions = {
-        "lazy",
-        "mason",
-        "neo-tree",
-        "trouble",
+        custom_status({
+          checkhealth = "Health Check",
+          help = "Help",
+          lspinfo = "LSP Info",
+          ["nvim-undotree"] = "Undo Tree",
+          ["neo-tree"] = "Neo-tree",
+          noice = "Popup",
+          snacks_notif = "Notification",
+
+          lazy = { title = "Lazy", details = lazy_count },
+          mason = { title = "Mason", details = mason_count },
+
+          trouble = "Trouble",
+          ["trouble:diagnostics"] = { title = "Diagnostics", details = trouble_count },
+          ["trouble:quickfix"] = { title = "Quickfix", details = trouble_count },
+          ["trouble:symbols"] = { title = "Symbols", details = trouble_count },
+          ["trouble:todo"] = { title = "TODO", details = trouble_count },
+        }),
       },
     })
   end,
