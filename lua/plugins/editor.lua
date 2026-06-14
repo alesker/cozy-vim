@@ -42,6 +42,7 @@ return {
       },
       spec = {
         mode = { "n", "x" },
+        { "<leader>a", group = "ai", icon = { icon = Core.icons.ai, color = "cyan" } },
         { "<leader>b", group = "buffer" },
         { "<leader>c", group = "code" },
         { "<leader>d", group = "debug" },
@@ -51,10 +52,9 @@ return {
         { "<leader>h", group = "harpoon", icon = { icon = Core.icons.harpoon, color = "orange" } },
         { "<leader>i", group = "insights", icon = { icon = Core.icons.insights, color = "purple" } },
         { "<leader>n", group = "notifications" },
-        { "<leader>o", group = "opencode", icon = { icon = Core.icons.ai, color = "cyan" } },
+        { "<leader>o", group = "options", icon = { icon = Core.icons.settings, color = "blue" } },
         { "<leader>p", group = "picker", icon = { icon = Core.icons.list, color = "green" } },
         { "<leader>s", group = "search" },
-        { "<leader>u", group = "ui" },
         { "<leader><Tab>", group = "tab" },
         { "m", group = "marks", mode = "n" },
         { "[", group = "prev" },
@@ -318,7 +318,7 @@ return {
             context.disable()
           end
         end,
-      }):map("<leader>uc")
+      }):map("<leader>oc")
 
       vim.keymap.set("n", "gc", function()
         require("treesitter-context").go_to_context(vim.v.count1)

@@ -63,7 +63,7 @@ return {
         name = "Render Markdown",
         get = require("render-markdown").get,
         set = require("render-markdown").set,
-      }):map("<leader>um")
+      }):map("<leader>om")
     end,
   },
 }

@@ -9,7 +9,7 @@ return {
         name = "Screenkey",
         get = require("screenkey").is_active,
         set = require("screenkey").toggle,
-      }):map("<leader>uS")
+      }):map("<leader>oS")
 
       local macro_dispay = require("util.screenkey_macro_display")
       macro_dispay.setup(opts)

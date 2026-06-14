@@ -103,15 +103,15 @@ vim.keymap.set("n", "[e", diagnostic_goto(false, "ERROR"), { desc = "Prev Error"
 vim.keymap.set("n", "]w", diagnostic_goto(true, "WARN"), { desc = "Next Warning" })
 vim.keymap.set("n", "[w", diagnostic_goto(false, "WARN"), { desc = "Prev Warning" })
 
-Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
-Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
-Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>ur")
+Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>os")
+Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>ow")
+Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>or")
 
-Snacks.toggle.diagnostics():map("<leader>ud")
-Snacks.toggle.inlay_hints():map("<leader>uh")
-Snacks.toggle.treesitter():map("<leader>uT")
-Snacks.toggle.dim():map("<leader>uD")
-Snacks.toggle.indent():map("<leader>ug")
+Snacks.toggle.diagnostics():map("<leader>od")
+Snacks.toggle.inlay_hints():map("<leader>oh")
+Snacks.toggle.treesitter():map("<leader>oT")
+Snacks.toggle.dim():map("<leader>oD")
+Snacks.toggle.indent():map("<leader>og")
 
 Snacks.toggle.profiler():map("<leader>dpp")
 Snacks.toggle.profiler_highlights():map("<leader>dph")
@@ -142,4 +142,4 @@ Snacks.toggle({
     toggle_key("<RightMouse>")
   end,
   name = "Hard Mode",
-}):map("<leader>uH")
+}):map("<leader>oH")
