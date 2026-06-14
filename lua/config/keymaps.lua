@@ -72,12 +72,23 @@ vim.keymap.set("i", ";", ";<c-g>u")
 vim.keymap.set("n", "<leader>u", function()
   vim.cmd("packadd nvim.undotree")
 
+  local highlighter = require("util.undotree_highlighter")
+
+  vim.api.nvim_create_autocmd({ "WinEnter" }, {
+    group = Core.create_augroup("undotree_syntax_refresh"),
+    callback = function()
+      local buf = vim.api.nvim_get_current_buf()
+      highlighter.highlight(buf)
+    end,
+  })
+
   local undotree = require("undotree")
   local width = math.floor(vim.o.columns * 0.25)
 
-  undotree.open({
-    command = "botright " .. width .. "vnew",
-  })
+  undotree.open({ command = "botright " .. width .. "vnew" })
+
+  local buf = vim.api.nvim_get_current_buf()
+  highlighter.highlight(buf)
 end, { desc = "Undo Tree" })
 
 -- Quit
