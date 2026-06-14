@@ -68,6 +68,18 @@ vim.keymap.set("i", ",", ",<c-g>u")
 vim.keymap.set("i", ".", ".<c-g>u")
 vim.keymap.set("i", ";", ";<c-g>u")
 
+-- Undo
+vim.keymap.set("n", "<leader>u", function()
+  vim.cmd("packadd nvim.undotree")
+
+  local undotree = require("undotree")
+  local width = math.floor(vim.o.columns * 0.25)
+
+  undotree.open({
+    command = "botright " .. width .. "vnew",
+  })
+end, { desc = "Undo Tree" })
+
 -- Quit
 vim.keymap.set("n", "<leader>q", "<cmd>qa<cr>", { desc = "Quit All" })
 

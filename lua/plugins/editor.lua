@@ -70,6 +70,7 @@ return {
           { pattern = "oil", icon = Core.icons.oil, color = "orange" },
           { pattern = "lazy", icon = Core.icons.lazy, color = "yellow" },
           { pattern = "mason", icon = Core.icons.mason, color = "yellow" },
+          { pattern = "undo", icon = Core.icons.undo, color = "black" },
         },
       },
     },

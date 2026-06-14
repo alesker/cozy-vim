@@ -50,6 +50,7 @@ Core.icons = {
   mason = " ",
   oil = " ",
   ai = "󰹻 ",
+  undo = " ",
 }
 
 Core.icons.dashboard = {
