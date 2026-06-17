@@ -56,6 +56,24 @@ return {
     config = function(_, opts)
       require("persistence").setup(opts)
 
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "PersistenceSavePre",
+        callback = function()
+          local scope_core = require("scope.core")
+
+          scope_core.on_tab_leave()
+          scope_core.on_tab_enter()
+          require("scope.session").save_state()
+        end,
+      })
+
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "PersistenceLoadPost",
+        callback = function()
+          require("scope.session").load_state()
+        end,
+      })
+
       vim.api.nvim_create_user_command("PersistenceLoad", function(_)
         require("persistence").load()
       end, { desc = "Restore most recent session" })
