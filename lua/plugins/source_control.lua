@@ -100,6 +100,9 @@ return {
         topdelete = { text = Core.icons.git.diff.topdelete },
         changedelete = { text = Core.icons.git.diff.changedelete },
       },
+      preview_config = {
+        border = "rounded",
+      },
       on_attach = function(buffer)
         local gitsigns = package.loaded.gitsigns
 
