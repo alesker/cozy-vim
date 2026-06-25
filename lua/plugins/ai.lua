@@ -61,8 +61,14 @@ return {
           input = {},
           picker = {
             actions = {
-              opencode_send = function(...)
-                return require("opencode").snacks_picker_send(...)
+              opencode_send = function(picker)
+                local items = vim.tbl_map(function(item)
+                  return item.file
+                      and require("opencode").format({ path = item.file, from = item.pos, to = item.end_pos })
+                    or item.text
+                end, picker:selected({ fallback = true }))
+
+                require("opencode").prompt(table.concat(items, ", ") .. " ")
               end,
             },
           },
@@ -86,64 +92,50 @@ return {
       end
 
       local opencode_port = get_free_port()
-
-      local function opencode_command()
-        local config = vim.fn.json_encode({
-          default_agent = pair_programmer.agent,
-          agent = {
-            [pair_programmer.agent] = {
-              hidden = false,
-              model = pair_programmer.model,
-              reasoningEffort = pair_programmer.reasoning,
-              textVerbosity = pair_programmer.verbosity,
-            },
+      local opencode_config = vim.fn.json_encode({
+        default_agent = pair_programmer.agent,
+        agent = {
+          [pair_programmer.agent] = {
+            hidden = false,
+            model = pair_programmer.model,
+            reasoningEffort = pair_programmer.reasoning,
+            textVerbosity = pair_programmer.verbosity,
           },
-        })
+        },
+      })
 
-        return table.concat({
-          "OPENCODE_CONFIG_CONTENT=" .. vim.fn.shellescape(config),
-          "opencode",
-          "--port",
-          tostring(opencode_port),
-        }, " ")
-      end
+      local terminal = require("toggleterm.terminal").Terminal:new({
+        cmd = "opencode --port " .. opencode_port,
+        display_name = "OpenCode",
+        direction = "vertical",
+        hidden = true,
+      })
 
+      vim.env.OPENCODE_CONFIG_CONTENT = opencode_config
       vim.g.opencode_opts = {
         server = {
-          port = opencode_port,
+          url = "http://localhost:" .. opencode_port,
           start = function()
-            require("opencode.terminal").open(opencode_command())
-          end,
-          stop = function()
-            require("opencode.terminal").close()
-          end,
-          toggle = function()
-            require("opencode.terminal").toggle(opencode_command())
+            terminal:open()
+            terminal:close()
           end,
         },
       }
 
-      local opencode_work = require("util.opencode_work.opencode_work")
-      opencode_work.setup()
+      local clanker_work = require("util.clanker_work.clanker_work")
+      clanker_work.setup({
+        client = "opencode",
+      })
 
-      vim.keymap.set({ "n", "x" }, "<leader>aa", function()
-        require("opencode").ask("@this: ", { submit = true })
-      end, { desc = "OpenCode Ask" })
-      vim.keymap.set({ "n", "x" }, "<leader>ao", function()
-        require("opencode").select()
-      end, { desc = "OpenCode Select" })
-      vim.keymap.set("n", "<leader>as", function()
-        require("opencode").select_session()
-      end, { desc = "OpenCode Sessions" })
-      vim.keymap.set({ "n", "t" }, "<leader>at", function()
-        require("opencode").toggle()
-      end, { desc = "OpenCode Toggle" })
+      vim.keymap.set({ "n" }, "<leader>at", function()
+        terminal:toggle()
+      end, { desc = "Toggle" })
       vim.keymap.set({ "n", "x" }, "<leader>aw", function()
-        opencode_work.schedule()
-      end, { desc = "OpenCode Work" })
-      vim.keymap.set("n", "<leader>ax", function()
-        opencode_work.stop_current()
-      end, { desc = "OpenCode Work Stop" })
+        clanker_work.schedule()
+      end, { desc = "Work" })
+      vim.keymap.set({ "n", "x" }, "<leader>ax", function()
+        clanker_work.stop_current()
+      end, { desc = "Stop Work" })
     end,
   },
 }

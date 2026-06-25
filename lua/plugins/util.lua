@@ -10,7 +10,15 @@ return {
     "akinsho/toggleterm.nvim",
     version = "*",
     opts = {
+      size = function(term)
+        if term.direction == "horizontal" then
+          return vim.o.columns * 0.2
+        elseif term.direction == "vertical" then
+          return vim.o.columns * 0.4
+        end
+      end,
       direction = "float",
+      persist_mode = false,
       float_opts = {
         border = "rounded",
         title_pos = "center",

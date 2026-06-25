@@ -1,23 +1,24 @@
----@class OpencodeWorkRange
+---@class ClankerWorkRange
 ---@field start_row integer
 ---@field end_row integer
 
----@class OpencodeWorkTaskMarks
+---@class ClankerWorkTaskMarks
 ---@field header_anchor? integer
 ---@field footer_anchor? integer
 
----@class OpencodeWorkTask
+---@class ClankerWorkTask
 ---@field buf integer
 ---@field win integer
----@field range OpencodeWorkRange
----@field mark_anchors? OpencodeWorkTaskMarks
----@field status "prompting"|"submitted"|"running"
+---@field range ClankerWorkRange
+---@field mark_anchors? ClankerWorkTaskMarks
+---@field prompt? string
+---@field status "prompting"|"queued"|"submitted"|"running"
 ---
 
 local Task = {}
 Task.__index = Task
 
----@class OpencodeWorkTask
+---@class ClankerWorkTask
 function Task.new()
   local buf = vim.api.nvim_get_current_buf()
 
