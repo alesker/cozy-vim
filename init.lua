@@ -17,12 +17,18 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+local specs = {
+  { import = "plugins" },
+  { import = "plugins.ui" },
+  { import = "plugins.lang" },
+}
+
+if (vim.uv or vim.loop).fs_stat(vim.fn.stdpath("config") .. "/lua/plugins/local") then
+  table.insert(specs, { import = "plugins.local" })
+end
+
 require("lazy").setup({
-  spec = {
-    { import = "plugins" },
-    { import = "plugins.ui" },
-    { import = "plugins.lang" },
-  },
+  spec = specs,
   install = { colorscheme = { "desert" } },
   checker = { enabled = true },
 })
