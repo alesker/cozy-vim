@@ -1,5 +1,8 @@
 # CozyVim
 
+![](https://github.com/user-attachments/assets/8ee6f857-c580-406c-b078-720030975e69)
+
+
 Neovim config using lazy.nvim for focused work and cozy vibes.
 
 ## Features
