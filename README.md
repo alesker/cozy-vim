@@ -9,8 +9,8 @@ Neovim config using lazy.nvim for focused work and cozy vibes.
 
 - Language-aware editing with LSP navigation, code actions, rename, hover, codelens, diagnostics, and spell checking
     - `nvim-lspconfig`, `mason-lspconfig`, `Trouble`
-- Completion, snippets, signature help, auto-pairs, and AI-assisted completion from insert mode
-    - `blink.cmp`, `nvim-autopairs`, `minuet-ai`
+- Completion, snippets, signature help, and auto-pairs
+    - `blink.cmp`, `nvim-autopairs`
 - Syntax highlighting, indentation, folding, structural text objects, and code-aware movement
     - `nvim-treesitter`, `nvim-treesitter-textobjects`, `mini.ai`, `treesitter-context`
 - Formatting and linting hooks that can be extended per language and provision required Mason tools (default support for Go, Lua, shell, Markdown, and data formats)

@@ -24,14 +24,9 @@ return {
         ["<C-f>"] = { "scroll_documentation_down", "fallback" },
 
         ["<C-s>"] = { "show_signature", "hide_signature", "fallback" },
-
-        ["<A-y>"] = require("minuet").make_blink_map(),
       },
       appearance = {
         nerd_font_variant = "mono",
-        kind_icons = {
-          openai = Core.icons.ai,
-        },
       },
       cmdline = {
         keymap = {
@@ -85,16 +80,6 @@ return {
           "path",
           "snippets",
           "buffer",
-          "minuet",
-        },
-        providers = {
-          minuet = {
-            name = "minuet",
-            module = "minuet.blink",
-            async = true,
-            timeout_ms = 2000,
-            score_offset = 50,
-          },
         },
       },
     },
