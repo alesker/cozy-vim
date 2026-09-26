@@ -29,8 +29,8 @@ Neovim config using lazy.nvim for focused work and cozy vibes.
     - `bufferline.nvim`, `scope.nvim`, `lualine.nvim`
 - Command, input, notification, scroll, indent, dimming, and toggle UI refinements
     - `noice.nvim`, `snacks.nvim`
-- In-editor AI workflow integration through an OpenCode terminal/session bridge and work scheduler
-    - `opencode.nvim`, `toggleterm.nvim`
+- In-editor AI workflow through a Neovim-owned OpenCode V2 server, terminal client, and Clanker Work scheduler
+    - `toggleterm.nvim`
 
 ## Optional plugins
 

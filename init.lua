@@ -33,6 +33,11 @@ require("lazy").setup({
   checker = { enabled = true },
 })
 
+local clanker_work = require("util.clanker_work.clanker_work")
+local opencode = require("util.opencode.setup").setup()
+local opencode_client = require("util.clanker_work.clients.opencode_client").new(opencode)
+clanker_work.setup({ client = opencode_client })
+
 require("config.keymaps")
 require("config.autocmds")
 

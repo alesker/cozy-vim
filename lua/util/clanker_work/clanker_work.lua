@@ -27,18 +27,6 @@ local function border_fill(width, ...)
   return string.rep("─", math.max(0, width - used))
 end
 
----@param client ClankerWorkClientName
----@return ClankerWorkClient
-local function create_client(client)
-  local clients = {
-    opencode = function()
-      return require("util.clanker_work.clients.opencode_client").new()
-    end,
-  }
-
-  return clients[client]()
-end
-
 ---@param render_objects table[]
 ---@param indicator string
 ---@param task ClankerWorkTask
@@ -210,7 +198,7 @@ function M.stop_current()
 end
 
 ---@class ClankerWorkSetupOpts
----@field client ClankerWorkClientName
+---@field client ClankerWorkClient
 
 ---@param opts ClankerWorkSetupOpts
 function M.setup(opts)
@@ -230,7 +218,7 @@ function M.setup(opts)
   })
 
   state.task_manager = TaskManager.new()
-  state.client = create_client(opts.client)
+  state.client = opts.client
   state.renderer = Renderer.new({
     spinner = Spinner.new(),
     decorate = decorate,

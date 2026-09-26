@@ -100,6 +100,17 @@ vim.keymap.set("n", "<leader>l", "<cmd>Lazy<cr>", { desc = "Lazy" })
 -- Mason
 vim.keymap.set("n", "<leader>m", "<cmd>Mason<cr>", { desc = "Mason" })
 
+-- AI work
+vim.keymap.set("n", "<leader>at", function()
+  require("util.opencode.setup").toggle()
+end, { desc = "Toggle" })
+vim.keymap.set({ "n", "x" }, "<leader>aw", function()
+  require("util.clanker_work.clanker_work").schedule()
+end, { desc = "Work" })
+vim.keymap.set({ "n", "x" }, "<leader>ax", function()
+  require("util.clanker_work.clanker_work").stop_current()
+end, { desc = "Stop Work" })
+
 -- Clear search
 vim.keymap.set({ "i", "n", "s" }, "<Esc>", function()
   vim.cmd("nohlsearch")

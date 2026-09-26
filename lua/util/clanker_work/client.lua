@@ -1,7 +1,5 @@
 require("util.clanker_work.clanker_work_task")
 
----@alias ClankerWorkClientName "opencode"
-
 ---@class ClankerWorkPromise
 ---@field next fun(self: ClankerWorkPromise, callback: fun(...): any): ClankerWorkPromise
 ---@field catch fun(self: ClankerWorkPromise, callback: fun(err?: any): any): ClankerWorkPromise
