@@ -1,7 +1,6 @@
 local M = {}
 local client
 local terminal
-local terminal_session
 
 function M.setup()
   client = require("util.opencode.client").new()
@@ -18,14 +17,8 @@ function M.setup()
 end
 
 function M.toggle()
-  if not terminal_session then
-    terminal_session = client:create_session({
-      title = "OpenCode (Neovim)",
-      agent = "pair-programmer",
-      model = { providerID = "openai", id = "gpt-5.5", variant = "low" },
-    })
-  end
-  terminal_session
+  client
+    :conversation()
     :next(function(session)
       if terminal and terminal:is_open() then
         terminal:close()
@@ -33,13 +26,35 @@ function M.toggle()
       end
       if not terminal then
         terminal = require("toggleterm.terminal").Terminal:new({
-          cmd = "opencode --server " .. vim.fn.shellescape(client.url) .. " --session " .. vim.fn.shellescape(
+          cmd = "opencode mini --server " .. vim.fn.shellescape(client.url) .. " --session " .. vim.fn.shellescape(
             session.id
-          ),
+          ) .. " --replay",
           env = { OPENCODE_PASSWORD = client.password },
           display_name = "OpenCode",
           direction = "vertical",
           hidden = true,
+          on_open = function(term)
+            vim.cmd("stopinsert")
+            if term.readonly_buf ~= term.bufnr then
+              term.readonly_buf = term.bufnr
+              term.readonly_group = vim.api.nvim_create_augroup("OpenCodeReadOnly", { clear = true })
+              for _, key in ipairs({ "i", "I", "a", "A", "o", "O", "s", "S", "c", "C", "r", "R" }) do
+                vim.keymap.set("n", key, "<Nop>", { buffer = term.bufnr, desc = "OpenCode view only" })
+              end
+              vim.keymap.set("t", "<CR>", "<Nop>", { buffer = term.bufnr, desc = "OpenCode view only" })
+              vim.api.nvim_create_autocmd("TermEnter", {
+                group = term.readonly_group,
+                buffer = term.bufnr,
+                callback = function()
+                  vim.schedule(function()
+                    if vim.api.nvim_get_current_buf() == term.bufnr then
+                      vim.cmd("stopinsert")
+                    end
+                  end)
+                end,
+              })
+            end
+          end,
         })
       end
       terminal:open()

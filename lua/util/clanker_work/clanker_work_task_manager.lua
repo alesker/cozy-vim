@@ -126,7 +126,7 @@ end
 ---@param event ClankerWorkClientEvent
 ---@return ClankerWorkTask?
 function TaskManager:handle_event(event)
-  if not self.active_task then
+  if not self.active_task or event.task ~= self.active_task then
     return
   end
 
@@ -141,7 +141,7 @@ function TaskManager:handle_event(event)
     return self:finish_active_task()
   end
 
-  if event.type == "done" and task.status == "running" then
+  if event.type == "done" then
     return self:finish_active_task()
   end
 end

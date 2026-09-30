@@ -50,6 +50,7 @@ function Client.new()
     password = vim.fn.sha256(tostring(vim.uv.hrtime()) .. tostring(vim.fn.getpid())),
     listeners = {},
     sessions = {},
+    children = {},
     creating = 0,
     closing = false,
   }, Client)
@@ -87,7 +88,8 @@ function Client:request(method, path, body)
     vim.schedule(function()
       local content, status = (response.stdout or ""):match("^(.*)\n(%d%d%d)$")
       if response.code ~= 0 or not status or tonumber(status) >= 400 then
-        result:reject((decode(content or "") or {}).message or response.stderr or "OpenCode request failed")
+        local message = (decode(content or "") or {}).message
+        result:reject(message or (response.stderr ~= "" and response.stderr) or "OpenCode request failed")
       else
         result:resolve(decode(content or "") or {})
       end
@@ -103,8 +105,22 @@ function Client:emit(event)
 end
 
 function Client:handle_event(event)
+  if self.closing then
+    return
+  end
   local data = event.data or {}
-  if not self.sessions[data.sessionID] or self.closing then
+  if event.type == "server.connected" then
+    self:emit(event)
+    return
+  end
+  if
+    event.type == "session.created"
+    and data.parentID
+    and (self.sessions[data.parentID] or self.children[data.parentID])
+  then
+    self.children[data.sessionID] = data.parentID
+  end
+  if not (self.sessions[data.sessionID] or self.children[data.sessionID]) then
     return
   end
   if event.type == "permission.asked" then
@@ -272,6 +288,46 @@ function Client:create_session(opts)
   return result
 end
 
+function Client:conversation()
+  if not self.conversation_session then
+    local session = self:create_session({
+      title = "OpenCode (Neovim)",
+      agent = "pair-programmer",
+      model = { providerID = "openai", id = "gpt-5.5", variant = "low" },
+    })
+    self.conversation_session = session
+    session:catch(function()
+      if self.conversation_session == session then
+        self.conversation_session = nil
+      end
+    end)
+  end
+  return self.conversation_session
+end
+
+function Client:delete_session(id)
+  local result = promise()
+  self
+    :request("DELETE", "/api/session/" .. id)
+    :next(function()
+      self.sessions[id] = nil
+      for child, parent in pairs(self.children) do
+        local current = parent
+        while current and current ~= id do
+          current = self.children[current]
+        end
+        if current == id then
+          self.children[child] = nil
+        end
+      end
+      result:resolve()
+    end)
+    :catch(function(err)
+      result:reject(err)
+    end)
+  return result
+end
+
 function Client:on_event(callback)
   table.insert(self.listeners, callback)
 end
@@ -292,7 +348,7 @@ function Client:shutdown()
       end, 10)
     end
     for id in pairs(self.sessions) do
-      local seconds = (deadline - vim.uv.hrtime()) / 1e9 - 0.25
+      local seconds = (deadline - vim.uv.hrtime()) / 1e9 - 0.35
       if seconds <= 0 then
         break
       end
@@ -310,10 +366,15 @@ function Client:shutdown()
     end
   end
   if self.job then
-    pcall(vim.fn.chanclose, self.job, "stdin")
-    local remaining = math.max(0, math.floor((deadline - vim.uv.hrtime()) / 1e6))
-    if vim.fn.jobwait({ self.job }, remaining)[1] == -1 then
-      vim.fn.jobstop(self.job)
+    local job = self.job
+    local pid = vim.fn.jobpid(job)
+    pcall(vim.fn.chanclose, job, "stdin")
+    local remaining = math.max(0, math.floor((deadline - vim.uv.hrtime()) / 1e6) - 100)
+    if vim.fn.jobwait({ job }, remaining)[1] == -1 then
+      if pid > 0 then
+        pcall(vim.uv.kill, pid, "sigkill")
+        vim.fn.jobwait({ job }, math.max(0, math.floor((deadline - vim.uv.hrtime()) / 1e6)))
+      end
     end
   end
 end

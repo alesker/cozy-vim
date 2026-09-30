@@ -18,6 +18,23 @@ local function notify(message, level)
   vim.notify(message, level or vim.log.levels.INFO, { title = "Clanker Work" })
 end
 
+local function notify_result(task, status, output, err)
+  local path = task.source_path or (vim.api.nvim_buf_is_valid(task.buf) and vim.api.nvim_buf_get_name(task.buf) or "")
+  local range = task.source_range or task.range
+  local location = string.format("%s:%d-%d", path ~= "" and path or "[buffer]", range.start_row + 1, range.end_row + 1)
+  local message = string.format(
+    "%s · %s\n\nPrompt\n%s\n\nOutput\n%s",
+    status,
+    location,
+    task.submitted_prompt or task.prompt or "[no prompt]",
+    output ~= "" and output or "[no text response]"
+  )
+  if err then
+    message = message .. "\n\nError\n" .. tostring(err)
+  end
+  notify(message, (err or status == "Failed") and vim.log.levels.ERROR or vim.log.levels.INFO)
+end
+
 local function border_fill(width, ...)
   local used = 0
   for i = 1, select("#", ...) do
@@ -94,14 +111,17 @@ dispatch_next_task = function()
   state.renderer:redraw()
 
   state.client:submit(task, task.prompt):catch(function(err)
-    state.task_manager:remove_task(task)
-    state.renderer:remove_task(task)
-
-    if err then
-      notify(err, vim.log.levels.ERROR)
+    if state.task_manager:is_active_task(task) then
+      state.task_manager:remove_task(task)
+      state.renderer:remove_task(task)
+      notify_result(
+        task,
+        "Failed",
+        type(err) == "table" and err.output or "",
+        type(err) == "table" and err.message or err
+      )
+      dispatch_next_task()
     end
-
-    dispatch_next_task()
   end)
 end
 
@@ -179,21 +199,19 @@ function M.stop_current()
   state.renderer:remove_task(task)
 
   if removed == "queued" then
+    notify_result(task, "Cancelled", "")
     dispatch_next_task()
     return
   end
 
   state.client
-    :interrupt()
-    :next(function()
+    :interrupt(task)
+    :next(function(result)
+      notify_result(task, "Cancelled", result.output or "", result.error)
       dispatch_next_task()
     end)
     :catch(function(err)
-      if err then
-        notify("Failed to interrupt Clanker work task: " .. tostring(err), vim.log.levels.ERROR)
-      end
-
-      dispatch_next_task()
+      notify_result(task, "Failed to cancel", "", err)
     end)
 end
 
@@ -252,6 +270,7 @@ function M.setup(opts)
     local finished_task = state.task_manager:handle_event(event)
     if finished_task then
       state.renderer:remove_task(finished_task)
+      notify_result(finished_task, event.type == "done" and "Completed" or "Failed", event.output or "", event.error)
       dispatch_next_task()
     end
   end)
