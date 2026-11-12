@@ -1,3 +1,13 @@
+-- Filetype detection
+vim.filetype.add({
+  pattern = {
+    -- Fastlane Ruby DSL files; preserve more specific built-in detection.
+    [".*/fastlane/[A-Z][^/.]*file"] = { "ruby", { priority = -math.huge } },
+    [".*/fastlane/[A-Z][^/.]*file%+[^/.]+"] = { "ruby", { priority = -math.huge } },
+  },
+})
+
+-- Plugin Specifications
 return {
   {
     "nvim-treesitter/nvim-treesitter",

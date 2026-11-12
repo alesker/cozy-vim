@@ -1,3 +1,4 @@
+-- Plugin Specifications
 return {
   {
     "nvim-treesitter/nvim-treesitter",
